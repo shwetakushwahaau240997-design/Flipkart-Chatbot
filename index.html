@@ -317,7 +317,7 @@
         function init() {
             const grid = document.getElementById('main-grid');
             products.forEach(p => {
-                grid.innerHTML += `<div class="bg-white p-3 border shadow-sm" onclick="openProduct(${p.id})"><img src="${p.imgs[0]}" class="h-32 mx-auto object-contain"><p class="text-xs mt-2 line-clamp-2">${p.name}</p><div class="flex gap-2 items-center"><span class="font-bold">₹${p.price}</span><span class="text-gray-400 line-through text-[10px]">₹${p.mrp}</span></div></div>`;
+                grid.innerHTML += `<div class="bg-white p-3 border shadow-sm" onclick="openProduct(${p.id})"><img src="${p.imgs[0]}" class="h-56 mx-auto object-contain"><p class="text-xs mt-2 line-clamp-2">${p.name}</p><div class="flex gap-2 items-center"><span class="font-bold">₹${p.price}</span><span class="text-gray-400 line-through text-[10px]">₹${p.mrp}</span></div></div>`;
             });
         }
 
