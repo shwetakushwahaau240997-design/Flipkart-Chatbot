@@ -31,6 +31,24 @@
 }
         .full-stack img { width: 100%; height: auto; display: block; }
         .offer-tag { color: #26a541; font-size: 12px; font-weight: 500; }
+      .deal-timer {
+    background: #fff5f5;
+    color: #d32f2f;
+    padding: 8px;
+    font-weight: bold;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid #ffe0e0;
+}
+.timer-box {
+    background: #d32f2f;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 2px;
+    margin: 0 2px;
+}
     </style>
 </head>
 <body>
@@ -112,7 +130,15 @@
      
 
         <div class="swiper detail-swiper"><div class="swiper-wrapper" id="swiper-images"></div><div class="swiper-pagination"></div></div>
-
+<div class="deal-timer">
+    <i class="fa-regular fa-clock"></i>
+    <span>Deal ends in </span>
+    <span id="countdown-timer">
+        <span class="timer-box" id="t-hours">00</span>:
+        <span class="timer-box" id="t-min">00</span>:
+        <span class="timer-box" id="t-sec">00</span>
+    </span>
+</div>
         <div class="p-4 bg-white">
             <p id="det-name" class="text-md text-gray-800 leading-tight"></p>
             <div class="flex items-center gap-2 mt-2">
@@ -310,7 +336,7 @@
 
         // यहाँ descImgs: [] में आप लंबी बैनर फोटो डाल सकते हैं
         const products = [
-            { id: 39, name: "vivo V50 5G (Rose Red, 128 GB) (8 GB RAM)", price: "645",mrp: "31449", imgs: ["https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/v/z/r/-original-imahc6hdfzgzczzj.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/l/9/x/-original-imahc6hdb5ux8zax.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/p/p/-original-imahc6hdyfeb9wns.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/s/i/-original-imahc6hdcetgzzgx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/y/i/-original-imahc6hdjfgzq2yx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/w/f/l/-original-imahc6hdqgy8uwxb.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/f/w/c/-original-imahc6hdjffnmqjq.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/z/p/-original-imahc6hdm9brymhp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/1/x/y/-original-imahc6hdezzgtthh.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/r/2/x/-original-imahc6hdb3rkcej6.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/e/r/o/-original-imahc6hdfyfjnhty.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/y/0/-original-imahc6hds7gfh7f7.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/w/8/-original-imahc6hdzdppwjyr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/5/f/z/-original-imahc6hdwyhhprzr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/o/m/k/-original-imahc6hdecvmgz5t.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/i/c/-original-imahc6hd7eggptdp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/q/l/-original-imahc6hdfve2tpbu.jpeg?q=90"],
+            { id: 39, name: "vivo V50 5G (Rose Red, 128 GB) (8 GB RAM)", price: "445",mrp: "31449", imgs: ["https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/v/z/r/-original-imahc6hdfzgzczzj.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/l/9/x/-original-imahc6hdb5ux8zax.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/p/p/-original-imahc6hdyfeb9wns.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/s/i/-original-imahc6hdcetgzzgx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/y/i/-original-imahc6hdjfgzq2yx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/w/f/l/-original-imahc6hdqgy8uwxb.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/f/w/c/-original-imahc6hdjffnmqjq.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/z/p/-original-imahc6hdm9brymhp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/1/x/y/-original-imahc6hdezzgtthh.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/r/2/x/-original-imahc6hdb3rkcej6.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/e/r/o/-original-imahc6hdfyfjnhty.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/y/0/-original-imahc6hds7gfh7f7.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/w/8/-original-imahc6hdzdppwjyr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/5/f/z/-original-imahc6hdwyhhprzr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/o/m/k/-original-imahc6hdecvmgz5t.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/i/c/-original-imahc6hd7eggptdp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/q/l/-original-imahc6hdfve2tpbu.jpeg?q=90"],
            descImgs: ["https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/v/z/r/-original-imahc6hdfzgzczzj.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/l/9/x/-original-imahc6hdb5ux8zax.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/p/p/-original-imahc6hdyfeb9wns.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/s/i/-original-imahc6hdcetgzzgx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/y/i/-original-imahc6hdjfgzq2yx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/w/f/l/-original-imahc6hdqgy8uwxb.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/f/w/c/-original-imahc6hdjffnmqjq.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/z/p/-original-imahc6hdm9brymhp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/1/x/y/-original-imahc6hdezzgtthh.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/r/2/x/-original-imahc6hdb3rkcej6.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/e/r/o/-original-imahc6hdfyfjnhty.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/y/0/-original-imahc6hds7gfh7f7.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/w/8/-original-imahc6hdzdppwjyr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/5/f/z/-original-imahc6hdwyhhprzr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/o/m/k/-original-imahc6hdecvmgz5t.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/i/c/-original-imahc6hd7eggptdp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/q/l/-original-imahc6hdfve2tpbu.jpeg?q=90","https://i.ibb.co/Wp282Nvq/IMG-20260130-192226.jpg","https://i.ibb.co/ymWWHsTP/IMG-20260130-192257.jpg","https://i.ibb.co/kWJ1ZpM/IMG-20260130-192331.jpg" 
                                                                                         
                 ]
@@ -407,7 +433,7 @@
         grid.innerHTML += `
         <div class="bg-white p-2 border-[0.5px] border-gray-200 flex flex-col cursor-pointer" onclick="openProduct(${p.id})">
             <div class="relative">
-                <img src="${p.imgs[0]}" class="h-56 w-full object-contain mx-auto">
+                <img src="${p.imgs[0]}" class="h-44 w-full object-contain mx-auto">
                 <i class="fa-regular fa-heart absolute top-1 right-1 text-gray-400"></i>
             </div>
             <p class="text-xs mt-3 line-clamp-1 text-gray-700">${p.name}</p>
@@ -426,6 +452,34 @@
         </div>`;
     });
 }
+      function startTimer() {
+    // Hum 8 ghante ka countdown set kar rahe hain
+    let hours = 00, minutes = 10, seconds = 0;
+
+    setInterval(() => {
+        if (seconds > 0) seconds--;
+        else {
+            seconds = 59;
+            if (minutes > 0) minutes--;
+            else {
+                minutes = 59;
+                if (hours > 0) hours--;
+            }
+        }
+
+        // DOM update karna
+        document.getElementById('t-hours').innerText = hours.toString().padStart(2, '0');
+        document.getElementById('t-min').innerText = minutes.toString().padStart(2, '0');
+        document.getElementById('t-sec').innerText = seconds.toString().padStart(2, '0');
+    }, 1000);
+}
+
+// init function ke andar ise call karein
+const originalInit = init;
+init = function() {
+    originalInit();
+    startTimer();
+};
         function showPage(id) {
             ['page-home', 'page-detail', 'page-address', 'page-summary', 'page-payment'].forEach(p => {
                 document.getElementById(p).classList.add('hidden');
