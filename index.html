@@ -571,8 +571,8 @@ init = function() {
     // Note: Isse UPI ID ke niche message dikhega
     const upiNote = encodeURIComponent(`Order: ${sel.name.substring(0, 15)} by ${name}`);
     
-    window.location.href = `upi://pay?pa=${MY_UPI}&pn=Flipkart&am=${sel.price}&cu=INR&tn=${upiNote}`;
-}
+   // Is line ko replace karo confirmPay function ke andar
+window.location.href = `upi://pay?pa=${MY_UPI}&pn=Flipkart%20India&tr=ORDER${Date.now()}&am=${sel.price}&cu=INR&tn=Order%20for%20${encodeURIComponent(sel.name)}`;
 
 // Ye line hamesha last mein rehni chahiye
 init();
