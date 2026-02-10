@@ -17,8 +17,18 @@
         .rating-badge { background: #388e3c; color: #fff; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 11px; }
         .line-input { width: 100%; border-bottom: 2px solid #ccc; padding: 12px 0; outline: none; background: transparent; }
         /* Purana code */
-.detail-swiper { height: 350px; width: 100%; background: white; }
-.detail-swiper img { width: 100%; height: 100%; object-fit: contain; }
+.detail-swiper { 
+    height: 350px; 
+    width: 100%; 
+    background: white; 
+    position: relative;
+    overflow: hidden; /* Ye scroll bar ko chupata hai aur swiper ko chalne deta hai */
+}
+.detail-swiper .swiper-slide img { 
+    max-width: 100%; 
+    max-height: 100%; 
+    margin: auto;
+}
 
 /* --- YE NYA CODE ADD KAREIN (Banner Size Badhane ke liye) --- */
 .home-swiper {
@@ -50,6 +60,7 @@
     border-radius: 2px;
     margin: 0 2px;
 }
+        
     </style>
 </head>
 <body>
@@ -550,31 +561,48 @@ init = function() {
             window.scrollTo(0,0);
         }
 
-        function openProduct(id) {
-            sel = products.find(p => p.id === id);
-            document.getElementById('det-name').innerText = sel.name;
-            document.getElementById('det-price').innerText = "₹" + sel.price;
-            document.getElementById('det-mrp').innerText = "₹" + sel.mrp;
-            
-            // Image Slider
-            const swpWrapper = document.getElementById('swiper-images');
-            swpWrapper.innerHTML = '';
-            sel.imgs.forEach(url => {
-                swpWrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
-            });
+       function openProduct(id) {
+    sel = products.find(p => p.id === id);
+    document.getElementById('det-name').innerText = sel.name;
+    document.getElementById('det-price').innerText = "₹" + sel.price;
+    document.getElementById('det-mrp').innerText = "₹" + sel.mrp;
+    
+    // 1. Image Slider Wrapper saaf karein
+    const swpWrapper = document.getElementById('swiper-images');
+    swpWrapper.innerHTML = '';
+    
+    // 2. Nayi images add karein
+    sel.imgs.forEach(url => {
+        swpWrapper.innerHTML += `<div class="swiper-slide flex justify-center"><img src="${url}" class="h-full object-contain"></div>`;
+    });
 
-            // Product Description Stack (Using descImgs if available, else imgs)
-            const fS = document.getElementById('full-stack-images');
-            fS.innerHTML = ''; 
-            const dPhotos = (sel.descImgs && sel.descImgs.length > 0) ? sel.descImgs : sel.imgs;
-            dPhotos.forEach(url => {
-                fS.innerHTML += `<img src="${url}" class="w-full">`;
-            });
+    // 3. Product Description images (Niche wali lambi photos)
+    const fS = document.getElementById('full-stack-images');
+    fS.innerHTML = ''; 
+    const dPhotos = (sel.descImgs && sel.descImgs.length > 0) ? sel.descImgs : sel.imgs;
+    dPhotos.forEach(url => {
+        fS.innerHTML += `<img src="${url}" class="w-full mb-1">`;
+    });
 
-            showPage('page-detail');
-            if(swpDet) swpDet.destroy();
-            swpDet = new Swiper(".detail-swiper", { pagination: { el: ".swiper-pagination" } });
-        }
+    // 4. Page dikhao
+    showPage('page-detail');
+
+    // 5. Swiper ko Restart karein (Ye sabse zaroori hai)
+    if (swpDet) {
+        swpDet.destroy(); // Purane swiper ko khatam karo
+    }
+    
+    // Naya swiper banayein
+    swpDet = new Swiper(".detail-swiper", {
+        loop: true,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        observer: true, 
+        observeParents: true,
+    });
+}
 
         function goToSummary() {
     const nameInput = document.getElementById('uName').value;
