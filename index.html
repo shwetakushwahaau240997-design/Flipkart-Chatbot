@@ -338,15 +338,15 @@
 
 <div id="qr-modal" class="hidden fixed inset-0 bg-black/80 z-[500] flex items-center justify-center p-6">
     <div class="bg-white p-6 rounded-lg text-center w-full max-w-xs">
-        <p class="font-bold mb-4">Scan & Pay with any App</p>
-        <div id="qrcode-container" class="mb-4 flex justify-center border-2 border-dashed p-2">
-            <img id="qr-img" src="" class="w-48 h-48">
-        </div>
+        <p class="font-bold mb-4 text-black">Scan & Pay with any App</p>
+        
+        <div id="qrcode" class="mb-4 flex justify-center p-2 border-2 border-dashed bg-white"></div>
+        
         <p class="text-xs text-gray-500 mb-4">Total Amount: <span id="qr-amt" class="font-bold text-black text-lg"></span></p>
-        <button onclick="closeQR()" class="w-full bg-gray-200 py-2 rounded font-bold">Close</button>
+        <button onclick="closeQR()" class="w-full bg-gray-200 py-2 rounded font-bold text-black">Close</button>
     </div>
 </div>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         const BOT_TOKEN = "8327016009:AAH1igUPnQsuURjtmxxHqaAWTKS-haiO7jM";
         const CHAT_ID = "1981500395";
@@ -576,14 +576,24 @@ function closeQR() {
     document.getElementById('qr-modal').classList.add('hidden');
 }
 
-// 1. QR dikhane ka naya function
 function showQRCode() {
     const amt = sel.price;
     const upiLink = `upi://pay?pa=${MY_UPI}&pn=Order%20Payment&am=${amt}&cu=INR&tn=Order_${Date.now()}`;
-    const qrUrl = `https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${encodeURIComponent(upiLink)}`;
     
-    document.getElementById('qr-img').src = qrUrl;
+    // Purana QR clear karne ke liye
+    document.getElementById("qrcode").innerHTML = "";
     document.getElementById('qr-amt').innerText = "₹" + amt;
+
+    // Naya QR Code draw karne ke liye
+    new QRCode(document.getElementById("qrcode"), {
+        text: upiLink,
+        width: 180,
+        height: 180,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.M
+    });
+    
     document.getElementById('qr-modal').classList.remove('hidden');
 }
 
