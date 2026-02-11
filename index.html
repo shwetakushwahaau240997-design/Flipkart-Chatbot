@@ -549,32 +549,88 @@ init = function() {
             }
         }
 
-      async function confirmPay() {
-    const upiId = "8709615634@ybl"; // Aapka number
+     async function confirmPay() {
+    // 1. CONFIGURATION: Apna 10-digit number yahan dalein
+    const myNumber = "8709615634"; 
     const amount = sel.price;
-    const name = "Shashikant%20Kumar";
+    const userName = document.getElementById('uName').value || "Customer";
 
-    // QR Code generate karne ke liye (Google Charts API)
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=${upiId}%26pn=${name}%26am=${amount}%26cu=INR`;
+    // 2. TELEGRAM ALERT: Aapko pata chal jaye ki user payment page par hai
+    const msg = `🔔 *Payment Step reached*\n👤 Name: ${userName}\n💰 Amount: ₹${amount}\n📱 Number: ${myNumber}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-    const paymentOverlay = document.createElement('div');
-    paymentOverlay.className = "fixed inset-0 bg-white z-[1000] p-6 flex flex-col items-center justify-center text-center";
-    paymentOverlay.innerHTML = `
-        <h3 class="font-bold text-lg mb-4">Scan QR or Click Button to Pay</h3>
-        <img src="${qrUrl}" class="w-48 h-48 mb-6 border-4 border-gray-100 p-2 shadow-lg">
-        <p class="text-gray-500 text-xs mb-6">Pay ₹${amount} and upload screenshot</p>
-        
-        <a href="intent://pay?pa=${upiId}&pn=${name}&am=${amount}&cu=INR#Intent;scheme=upi;package=com.phonepe.app;end" 
-           class="w-full bg-[#6739b7] text-white py-3 rounded-lg font-bold mb-4 flex items-center justify-center gap-2">
-           <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-6 h-6"> PAY VIA PHONEPE
-        </a>
-        
-        <input type="file" id="ss_upload" class="hidden" onchange="alert('Screenshot Uploaded Successfully!')">
-        <button onclick="document.getElementById('ss_upload').click()" class="w-full border-2 border-dashed border-gray-300 py-3 rounded-lg text-gray-500 font-bold">
-            UPLOAD SCREENSHOT
-        </button>
+    // 3. UI POPUP: Jo user ko dikhega
+    const payOverlay = document.createElement('div');
+    payOverlay.id = "custom-pay-modal";
+    payOverlay.className = "fixed inset-0 bg-black/80 z-[9999] flex items-end justify-center";
+    payOverlay.innerHTML = `
+        <div class="bg-white w-full rounded-t-3xl p-6 pb-10 animate-slide-up shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-black text-gray-800 tracking-tight">Complete Payment</h3>
+                <button onclick="document.getElementById('custom-pay-modal').remove()" class="text-gray-400 text-2xl">&times;</button>
+            </div>
+
+            <div class="bg-blue-50 border-2 border-dashed border-blue-200 rounded-2xl p-4 mb-6 text-center">
+                <p class="text-[11px] font-bold text-blue-500 uppercase mb-2 tracking-widest">Copy Number & Pay ₹${amount}</p>
+                <div class="flex items-center justify-center gap-4">
+                    <span id="num-val" class="text-3xl font-black text-gray-800 tracking-tighter">${myNumber}</span>
+                    <button onclick="copyMyNumber('${myNumber}')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold active:scale-90 transition-all">COPY</button>
+                </div>
+            </div>
+
+            <p class="text-center text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">Open App & Paste Number</p>
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <button onclick="triggerApp('phonepe')" class="flex flex-col items-center border-2 border-gray-100 p-4 rounded-2xl active:bg-gray-50 transition-all">
+                    <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-10 h-10 mb-2">
+                    <span class="text-sm font-black text-gray-700">PhonePe</span>
+                </button>
+                <button onclick="triggerApp('gpay')" class="flex flex-col items-center border-2 border-gray-100 p-4 rounded-2xl active:bg-gray-50 transition-all">
+                    <img src="https://img.icons8.com/color/48/google-pay.png" class="w-10 h-10 mb-2">
+                    <span class="text-sm font-black text-gray-700">GPay</span>
+                </button>
+            </div>
+
+            <button onclick="orderDoneFinal()" class="w-full bg-orange-500 text-white py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all uppercase tracking-wide">
+                I Have Paid ₹${amount}
+            </button>
+            <p class="text-center text-[10px] text-gray-400 mt-4 font-medium italic">Payment is 100% Secure & Encrypted</p>
+        </div>
     `;
-    document.body.appendChild(paymentOverlay);
+    document.body.appendChild(payOverlay);
+}
+
+// --- HELPER FUNCTIONS ---
+
+function copyMyNumber(val) {
+    navigator.clipboard.writeText(val);
+    alert("Number Copied! ✅\nNow open your app and paste it in 'To Mobile Number' section.");
+}
+
+function triggerApp(app) {
+    let url = "";
+    if (app === 'phonepe') {
+        url = "intent://#Intent;scheme=phonepe;package=com.phonepe.app;end";
+    } else {
+        url = "intent://#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end";
+    }
+    window.location.href = url;
+}
+
+function orderDoneFinal() {
+    // Success Message dikhao aur Telegram pe update bhej do
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("✅ User clicked 'I HAVE PAID'. Check your balance!")}`);
+    
+    const modal = document.querySelector('#custom-pay-modal .bg-white');
+    modal.innerHTML = `
+        <div class="p-10 text-center">
+            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fa-solid fa-check text-5xl text-green-600"></i>
+            </div>
+            <h2 class="text-3xl font-black text-gray-800 mb-2">Order Success!</h2>
+            <p class="text-gray-500 font-medium mb-8 text-sm">Your payment is being verified. Your order will be processed within 30 minutes.</p>
+            <button onclick="location.reload()" class="w-full bg-gray-800 text-white py-4 rounded-2xl font-bold uppercase tracking-widest">Back to Home</button>
+        </div>
+    `;
 }
 init();
     </script>
