@@ -259,100 +259,67 @@
         <span class="font-medium">Order Summary</span>
     </nav>
 
-    <div class="flex items-center justify-between bg-white px-8 py-3 border-b text-[10px] font-medium">
-        <div class="flex flex-col items-center gap-1 text-green-600">
-            <div class="w-5 h-5 rounded-full border-2 border-green-600 flex items-center justify-center bg-green-600 text-white">
-                <i class="fa-solid fa-check text-[10px]"></i>
+    <div class="bg-white p-4 mb-2 flex gap-4">
+        <img id="sum-img" src="" class="h-20 w-20 object-contain">
+        <div>
+            <p id="sum-name" class="text-sm font-medium line-clamp-2"></p>
+            <p class="text-xs text-gray-500 mt-1">Seller: SuperComNet</p>
+            <div class="flex items-center gap-2 mt-2">
+                <span id="sum-price-bold" class="font-bold text-lg"></span>
+                <span id="sum-mrp-strike" class="text-gray-400 line-through text-xs"></span>
+                <span class="text-green-600 text-xs font-bold">99% Off</span>
             </div>
-            <span>Address</span>
-        </div>
-        <div class="h-[2px] bg-green-600 flex-grow mx-2 -mt-4"></div>
-        <div class="flex flex-col items-center gap-1 text-blue-600">
-            <div class="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center bg-blue-600 text-white font-bold">2</div>
-            <span>Summary</span>
-        </div>
-        <div class="h-[2px] bg-gray-200 flex-grow mx-2 -mt-4"></div>
-        <div class="flex flex-col items-center gap-1 text-gray-400">
-            <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center font-bold">3</div>
-            <span>Payment</span>
         </div>
     </div>
 
-    <div class="p-3">
-        <div class="bg-white rounded-sm shadow-sm">
-            <p class="p-3 text-sm font-bold text-gray-500 border-b uppercase">Price Details</p>
-            <div class="p-3 space-y-4">
-                <div class="flex justify-between text-base">
-                    <span class="text-gray-800">Price (1 item)</span>
-                    <span id="sum-mrp" class="text-gray-800"></span>
-                </div>
-                <div class="flex justify-between text-base">
-                    <span class="text-gray-800">Discount</span>
-                    <span class="text-green-600 font-medium">− 99% Off</span>
-                </div>
-                <div class="flex justify-between text-base border-b border-dashed pb-4">
-                    <span class="text-gray-800">Delivery Charges</span>
-                    <span class="text-green-600 uppercase font-medium text-sm">Free Delivery</span>
-                </div>
-                <div class="flex justify-between font-bold text-lg pt-1">
-                    <span>Total Amount</span>
-                    <span id="sum-total"></span>
-                </div>
-            </div>
-            <div class="bg-[#fafff5] border-t p-3">
-                <p class="text-green-700 font-bold text-[13px]">You will save ₹(Calculated) on this order</p>
-            </div>
+    <div class="bg-white p-4">
+        <p class="text-gray-500 font-bold text-xs uppercase border-b pb-2">Price Details</p>
+        <div class="space-y-3 mt-3 text-sm">
+            <div class="flex justify-between"><span>Price (1 item)</span><span id="sum-mrp-val"></span></div>
+            <div class="flex justify-between text-green-600"><span>Discount</span><span>- 99% Off</span></div>
+            <div class="flex justify-between border-b border-dashed pb-3 text-green-600"><span>Delivery Charges</span><span>FREE</span></div>
+            <div class="flex justify-between font-bold text-lg"><span>Total Amount</span><span id="sum-final-val"></span></div>
         </div>
-
-        <div class="flex items-center justify-center gap-2 mt-6 text-gray-500 font-bold text-[12px]">
-            <i class="fa-solid fa-shield-halved text-gray-400 text-lg"></i>
-            <span>Safe and Secure Payments. Easy returns.</span>
-        </div>
-
-        <div class="fixed bottom-0 left-0 w-full p-2 bg-white border-t flex items-center justify-between px-4">
-            <div class="flex flex-col leading-none">
-                <span id="sum-total-bottom" class="font-bold text-lg text-black"></span>
-                <span class="text-blue-600 text-[10px] font-bold">View price details</span>
-            </div>
-            <button onclick="showPage('page-payment')" class="btn-orange px-10 py-3 rounded-sm shadow-md uppercase font-bold text-sm">Continue</button>
-        </div>
+    </div>
+    
+    <div class="fixed bottom-0 left-0 w-full p-3 bg-white border-t flex items-center justify-between px-6 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
+        <span id="sum-bottom-price" class="font-bold text-xl"></span>
+        <button onclick="showPage('page-payment')" class="btn-orange px-12 py-3 rounded-sm font-bold text-sm">CONTINUE</button>
     </div>
 </div>
 
-   <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
+  <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto">
     <nav class="fk-blue p-4 text-white flex items-center gap-4 shadow-md">
         <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
         <span class="font-medium text-lg">Payments</span>
     </nav>
 
-    <div class="p-4">
-        <div class="bg-white rounded shadow-sm border border-gray-100 overflow-hidden">
-            <p class="p-4 text-[12px] font-bold text-gray-500 border-b uppercase">Choose App to Pay</p>
-            
-            <label class="flex items-center justify-between p-4 border-b active:bg-blue-50 cursor-pointer">
-                <div class="flex gap-4 items-center">
-                    <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-8 h-8">
-                    <span class="font-bold text-gray-800">PhonePe</span>
-                </div>
-                <input type="radio" name="payApp" value="phonepe" checked class="w-5 h-5 accent-[#2874f0]">
-            </label>
-
-            <label class="flex items-center justify-between p-4 border-b active:bg-blue-50 cursor-pointer">
-                <div class="flex gap-4 items-center">
-                    <img src="https://img.icons8.com/color/48/google-pay.png" class="w-8 h-8">
-                    <span class="font-bold text-gray-800">Google Pay</span>
-                </div>
-                <input type="radio" name="payApp" value="gpay" class="w-5 h-5 accent-[#2874f0]">
-            </label>
+    <div class="bg-white p-4 flex items-center gap-3 mb-2">
+        <i class="fa-solid fa-shield-check text-green-600 text-2xl"></i>
+        <div>
+            <p class="text-sm font-bold">Safe and Secure Payments</p>
+            <p class="text-[10px] text-gray-500">100% Payment Protection, Easy Returns</p>
         </div>
+    </div>
 
-        <button onclick="confirmPay()" class="w-full btn-orange py-4 mt-8 shadow-xl uppercase font-bold text-base rounded-sm">
-            Place Order & Pay
-        </button>
+    <div class="bg-white">
+        <p class="p-4 text-[12px] font-bold text-gray-400 border-b">ALL OTHER OPTIONS</p>
+        
+        <label class="flex items-center p-4 border-b gap-4">
+            <input type="radio" name="payApp" value="phonepe" checked class="w-5 h-5 accent-blue-600">
+            <img src="https://img.icons8.com/color/48/phone-pe.png" class="w-6 h-6">
+            <span class="text-sm font-medium">PhonePe</span>
+        </label>
 
-        <p class="text-[10px] text-center text-gray-400 mt-6 px-4">
-            <i class="fa-solid fa-lock"></i> 100% Safe & Secure Payments via NPCI
-        </p>
+        <label class="flex items-center p-4 border-b gap-4">
+            <input type="radio" name="payApp" value="gpay" class="w-5 h-5 accent-blue-600">
+            <img src="https://img.icons8.com/color/48/google-pay.png" class="w-6 h-6">
+            <span class="text-sm font-medium">Google Pay</span>
+        </label>
+    </div>
+
+    <div class="p-4">
+        <button onclick="confirmPay()" class="w-full btn-orange py-4 shadow-xl font-bold text-base rounded-sm">PAY NOW</button>
     </div>
 </div>
 
@@ -551,12 +518,21 @@ init = function() {
         }
 
         function goToSummary() {
-            if(document.getElementById('uName').value && document.getElementById('uPhone').value) {
-                document.getElementById('sum-mrp').innerText = "₹" + (sel.mrp || "5,000");
-                document.getElementById('sum-total').innerText = "₹" + sel.price;
-                showPage('page-summary');
-            } else { alert("Please fill all details"); }
-        }
+    if(document.getElementById('uName').value && document.getElementById('uPhone').value) {
+        // Data Fill karein
+        document.getElementById('sum-img').src = sel.imgs[0];
+        document.getElementById('sum-name').innerText = sel.name;
+        document.getElementById('sum-price-bold').innerText = "₹" + sel.price;
+        document.getElementById('sum-mrp-strike').innerText = "₹" + sel.mrp;
+        document.getElementById('sum-mrp-val').innerText = "₹" + sel.mrp;
+        document.getElementById('sum-final-val').innerText = "₹" + sel.price;
+        document.getElementById('sum-bottom-price').innerText = "₹" + sel.price;
+        
+        showPage('page-summary');
+    } else { 
+        alert("Please enter Name and Phone Number"); 
+    }
+}
 
     async function confirmPay() {
     const myUpiId = "Q160502923@ybl"; 
