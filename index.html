@@ -755,7 +755,7 @@
 
     function toggleQR(el) {
         const qrBox = document.getElementById('qr-container');
-        const upiId = "8294338151@okbizaxis";
+        const upiId = "8789659286@okbizaxis";
         const amount = parseInt(sel.price.toString().replace(/[₹,]/g, ''));
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=${upiId}%26am=${amount}%26cu=INR`;
         document.getElementById('qrcode-img').innerHTML = `<img src="${qrUrl}" class="w-40 h-40 mx-auto">`;
